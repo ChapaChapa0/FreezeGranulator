@@ -4,6 +4,29 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="NwRgOp" name="ChapaGranulator">
     <GROUP id="{74594397-209F-7807-04EA-52BCD2292359}" name="Source">
+      <GROUP id="{C893A482-95D6-93E7-1FE6-21F43A33F184}" name="ImagesData">
+        <FILE id="w8ka8L" name="WT_sawtooth_off.png" compile="0" resource="1"
+              file="Images/WT_sawtooth_off.png"/>
+        <FILE id="eWifj3" name="WT_sawtooth_on.png" compile="0" resource="1"
+              file="Images/WT_sawtooth_on.png"/>
+        <FILE id="HpXqrJ" name="WT_sinus_off.png" compile="0" resource="1"
+              file="Images/WT_sinus_off.png"/>
+        <FILE id="uFLg9e" name="WT_sinus_on.png" compile="0" resource="1" file="Images/WT_sinus_on.png"/>
+        <FILE id="x8csoU" name="WT_square_off.png" compile="0" resource="1"
+              file="Images/WT_square_off.png"/>
+        <FILE id="o9IZGf" name="WT_square_on.png" compile="0" resource="1"
+              file="Images/WT_square_on.png"/>
+        <FILE id="bkzYVM" name="WT_triangle_off.png" compile="0" resource="1"
+              file="Images/WT_triangle_off.png"/>
+        <FILE id="MTcnAr" name="WT_triangle_on.png" compile="0" resource="1"
+              file="Images/WT_triangle_on.png"/>
+      </GROUP>
+      <GROUP id="{6AF81939-01C3-D1D3-5580-D750750362CB}" name="GUI">
+        <FILE id="HI09qg" name="EnvelopeButton.cpp" compile="1" resource="0"
+              file="Source/EnvelopeButton.cpp"/>
+        <FILE id="vTR7Oq" name="EnvelopeButton.h" compile="0" resource="0"
+              file="Source/EnvelopeButton.h"/>
+      </GROUP>
       <FILE id="iQEbJZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="drtV5g" name="PluginProcessor.h" compile="0" resource="0"

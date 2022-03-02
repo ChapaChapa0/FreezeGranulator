@@ -19,9 +19,19 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), 
+                        parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
+                           {
+                           std::make_unique<juce::AudioParameterBool>("envelope1", "Envelope 1", true),
+                           std::make_unique<juce::AudioParameterBool>("envelope2", "Envelope 2", false),
+                           std::make_unique<juce::AudioParameterBool>("envelope3", "Envelope 3", false),
+                           std::make_unique<juce::AudioParameterBool>("envelope4", "Envelope 4", false),
+                           })
 #endif
 {
+
+    /////////////////
+    
 }
 
 ChapaGranulatorAudioProcessor::~ChapaGranulatorAudioProcessor()
@@ -93,8 +103,8 @@ void ChapaGranulatorAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void ChapaGranulatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+    keyboardState.reset();
 }
 
 void ChapaGranulatorAudioProcessor::releaseResources()
@@ -166,7 +176,7 @@ bool ChapaGranulatorAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ChapaGranulatorAudioProcessor::createEditor()
 {
-    return new ChapaGranulatorAudioProcessorEditor (*this);
+    return new ChapaGranulatorAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -175,12 +185,26 @@ void ChapaGranulatorAudioProcessor::getStateInformation (juce::MemoryBlock& dest
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void ChapaGranulatorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+//==============================================================================
+void ChapaGranulatorAudioProcessor::updateValue()
+{
 }
 
 //==============================================================================
