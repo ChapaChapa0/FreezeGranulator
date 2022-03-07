@@ -60,7 +60,8 @@ void ChapaGranulatorAudioProcessorEditor::paintIfFileLoaded(juce::Graphics& g, c
     g.fillRect(thumbnailBounds);
     g.setColour(juce::Colours::darkorange);
 
-    thumbnail.drawChannels(g, thumbnailBounds, 0.0, thumbnail.getTotalLength(), 1.0f);
+    thumbnail.drawChannel(g, thumbnailBounds, 0.0, thumbnail.getTotalLength(), 0, 1.0f);
+    thumbnail.drawChannel(g, thumbnailBounds, 0.0, thumbnail.getTotalLength(), 1, 1.0f);
 }
 
 void ChapaGranulatorAudioProcessorEditor::thumbnailChanged()

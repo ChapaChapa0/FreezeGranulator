@@ -12,21 +12,48 @@
 //==============================================================================
 ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       ), 
-                        parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
-                           {
-                           std::make_unique<juce::AudioParameterBool>("envelope1", "Envelope 1", true),
-                           std::make_unique<juce::AudioParameterBool>("envelope2", "Envelope 2", false),
-                           std::make_unique<juce::AudioParameterBool>("envelope3", "Envelope 3", false),
-                           std::make_unique<juce::AudioParameterBool>("envelope4", "Envelope 4", false),
-                           })
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+    ),
+    parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
+        {
+        std::make_unique<juce::AudioParameterFloat>("attack", "Attack", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
+        std::make_unique<juce::AudioParameterFloat>("decay", "Decay", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
+        std::make_unique<juce::AudioParameterFloat>("sustain", "Sustain", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
+        std::make_unique<juce::AudioParameterFloat>("release", "Release", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
+
+        std::make_unique<juce::AudioParameterFloat>("tune", "Coarse Pitch Tunning", juce::NormalisableRange<float>(0.0f, 48.0f, 1.0f), 24.0f),
+        std::make_unique<juce::AudioParameterFloat>("fine", "Fine Pitch Tunning", juce::NormalisableRange<float>(-100.0f, 100.0f, 1.0f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("randTune", "Amount Random Tunning", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f),
+
+        std::make_unique<juce::AudioParameterFloat>("grains", "Number of Grains", juce::NormalisableRange<float>(0.1f, 100.0f, 0.1f), 5.0f),
+        std::make_unique<juce::AudioParameterFloat>("randGrains", "Amount Random Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+
+        std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+
+        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 10.0f),
+        std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+
+        std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
+        std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+
+        std::make_unique<juce::AudioParameterBool>("envelope1", "Envelope 1 Grains", true),
+        std::make_unique<juce::AudioParameterBool>("envelope2", "Envelope 2 Grains", false),
+        std::make_unique<juce::AudioParameterBool>("envelope3", "Envelope 3 Grains", false),
+        std::make_unique<juce::AudioParameterBool>("envelope4", "Envelope 4 Grains", false),
+
+        std::make_unique<juce::AudioParameterBool>("forward", "Direction Grains Forward", true),
+        std::make_unique<juce::AudioParameterBool>("backward", "Direction Grains Backward", false),
+        std::make_unique<juce::AudioParameterBool>("random", "Direction Grains Random", false),
+        //std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
+
+        })
 #endif
 {
 
