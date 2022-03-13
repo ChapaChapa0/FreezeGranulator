@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+    Author:  Chapa
 
   ==============================================================================
 */
@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "EnvelopeButton.h"
 
 //==============================================================================
 /**
@@ -42,8 +43,13 @@ private:
     juce::AudioProcessorValueTreeState& valueTreeState;
     juce::MidiKeyboardComponent keyboardComponent;
 
+    EnvelopeButton envelopeButtons[4];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonsAttachments[4];
+
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
+
+    
 
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;

@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+    Author:  Chapa
 
   ==============================================================================
 */
@@ -15,13 +15,29 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
       keyboardComponent(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
       thumbnailCache(5), thumbnail(512, formatManager, thumbnailCache)
 {
-    addAndMakeVisible(&openButton);
     openButton.setButtonText("Open...");
     openButton.addListener(this);
+    addAndMakeVisible(&openButton);
 
     formatManager.registerBasicFormats();
     transportSource.addChangeListener(this);
     thumbnail.addChangeListener(this);
+
+    // Set the wavetable radio buttons for the 3 oscillators
+    //auto stringEnvArray = juce::StringArray("sin", "square", "triangle", "sawtooth");
+    auto stringEnvArray = juce::StringArray("1", "2", "3", "4");
+
+    for (int i = 0; i < 4; ++i)
+    {
+        auto parameterId = "envelope" + stringEnvArray[i];
+        envelopeButtonsAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, parameterId, envelopeButtons[i]));
+        envelopeButtons[i].setEnvelope(i);
+        envelopeButtons[i].setClickingTogglesState(true);
+        envelopeButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
+        envelopeButtons[i].addListener(this);
+        envelopeButtons[i].setBounds(10 + (i % 2) * 60, 10 + int(i / 2) * 60, 50, 50);
+        addAndMakeVisible(&envelopeButtons[i]);
+    }
 
     setSize (800, 600);
 }
@@ -38,7 +54,7 @@ void ChapaGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
 
-    juce::Rectangle<int> thumbnailBounds(10, 100, getWidth() - 20, getHeight() - 120);
+    juce::Rectangle<int> thumbnailBounds(10, 280, getWidth() - 20, 300);
 
     if (thumbnail.getNumChannels() == 0)
         paintIfNoFileLoaded(g, thumbnailBounds);
@@ -71,7 +87,7 @@ void ChapaGranulatorAudioProcessorEditor::thumbnailChanged()
 
 void ChapaGranulatorAudioProcessorEditor::resized()
 {
-    openButton.setBounds(10, 10, getWidth() - 20, 20);
+    openButton.setBounds(10, 250, getWidth() - 20, 20);
 }
 
 //==============================================================================
