@@ -49,9 +49,10 @@ private:
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
 
-    
-
     juce::AudioFormatManager formatManager;
+    juce::AudioSampleBuffer fileBuffer;
+    int filePosition;
+
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::AudioThumbnailCache thumbnailCache;
