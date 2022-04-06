@@ -31,13 +31,13 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("fine", "Fine Pitch Tunning", juce::NormalisableRange<float>(-100.0f, 100.0f, 1.0f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTune", "Amount Random Tunning", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("grains", "Number of Grains", juce::NormalisableRange<float>(0.1f, 100.0f, 0.1f), 5.0f),
-        std::make_unique<juce::AudioParameterFloat>("randGrains", "Amount Random Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("density", "Number of Grains", juce::NormalisableRange<float>(0.1f, 100.0f, 0.1f, 1.0f), 5.0f),
+        std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 10.0f),
+        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(10.0f, 10000.0f, 1.0f, 0.4f), 200.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
@@ -48,17 +48,13 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterBool>("envelope3", "Envelope 3 Grains", false),
         std::make_unique<juce::AudioParameterBool>("envelope4", "Envelope 4 Grains", false),
 
-        std::make_unique<juce::AudioParameterBool>("forward", "Direction Grains Forward", true),
-        std::make_unique<juce::AudioParameterBool>("backward", "Direction Grains Backward", false),
-        std::make_unique<juce::AudioParameterBool>("random", "Direction Grains Random", false),
-        //std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
+        std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
-        })
+        }), grain(Grain())
 #endif
 {
-
-    /////////////////
-    
+    time = 0;
+    Grain grain = *new Grain();
 }
 
 ChapaGranulatorAudioProcessor::~ChapaGranulatorAudioProcessor()
@@ -130,8 +126,8 @@ void ChapaGranulatorAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void ChapaGranulatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    synth.setCurrentPlaybackSampleRate(sampleRate);
-    keyboardState.reset();
+    //synth.setCurrentPlaybackSampleRate(sampleRate);
+    //keyboardState.reset();
 }
 
 void ChapaGranulatorAudioProcessor::releaseResources()
@@ -175,29 +171,16 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    //
-    const int numSamplesInBlock = buffer.getNumSamples()
+    const int numSamplesInBlock = buffer.getNumSamples();
+    const int numChannelsInBlock = buffer.getNumChannels();
     const int numSamplesInFile = fileBuffer.getNumSamples();
 
     if (numSamplesInBlock == 0) return;
 
-    for (int sample = 0; sample < numSamplesInBlock; ++sample) {
-
-        for (int channel = 0; channel < totalNumInputChannels; ++channel)
-        {
-            auto* channelData = buffer.getWritePointer(channel);
-            const float* fileData = fileBuffer.getReadPointer(channel % fileBuffer.getNumChannels());
-            channelData[sample] = fileData[filePosition];
-        }
-
-        if (filePosition < numSamplesInFile) 
-        {
-            ++filePosition;
-        }
-        else 
-        {
-            filePosition = 0;
-        }
+    for (int i = 0; i < numSamplesInBlock; ++i)
+    {
+        grain.process(buffer, fileBuffer, numChannelsInBlock, numSamplesInBlock, numSamplesInFile, time);
+        ++time;
     }
 }
 

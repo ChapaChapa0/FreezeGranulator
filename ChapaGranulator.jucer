@@ -26,6 +26,8 @@
               file="Source/EnvelopeButton.cpp"/>
         <FILE id="vTR7Oq" name="EnvelopeButton.h" compile="0" resource="0"
               file="Source/EnvelopeButton.h"/>
+        <FILE id="YymFvk" name="PluginLook.cpp" compile="1" resource="0" file="Source/PluginLook.cpp"/>
+        <FILE id="DoBAl3" name="PluginLook.h" compile="0" resource="0" file="Source/PluginLook.h"/>
       </GROUP>
       <FILE id="iQEbJZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -34,6 +36,8 @@
       <FILE id="rBxaAP" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="M8wa9n" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="nrmxd8" name="Grain.cpp" compile="1" resource="0" file="Source/Grain.cpp"/>
+      <FILE id="v2Up7Y" name="Grain.h" compile="0" resource="0" file="Source/Grain.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

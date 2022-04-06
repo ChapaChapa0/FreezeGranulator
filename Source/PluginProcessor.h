@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Grain.h"
 
 //==============================================================================
 /**
@@ -57,8 +58,16 @@ public:
     void updateValue();
     
     juce::MidiKeyboardState keyboardState;
+
 private:
-    juce::Synthesiser synth;
+    // Sample Path
+    juce::String filePath;
+    juce::String restoredPath;
+    juce::String chosenPath;
+
+    int time;
+    Grain grain;
+    juce::AudioSampleBuffer& fileBuffer;
     juce::AudioProcessorValueTreeState parameters;    
 
     //==============================================================================

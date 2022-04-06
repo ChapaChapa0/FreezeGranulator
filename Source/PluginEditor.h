@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "EnvelopeButton.h"
+#include "PluginLook.h"
 
 //==============================================================================
 /**
@@ -44,19 +45,24 @@ private:
     juce::MidiKeyboardComponent keyboardComponent;
 
     EnvelopeButton envelopeButtons[4];
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonsAttachments[4];
+    juce::Slider parameterSliders[11];
+    juce::Label parameterLabels[11];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[4];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[11];
 
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
 
     juce::AudioFormatManager formatManager;
-    juce::AudioSampleBuffer fileBuffer;
-    int filePosition;
+    //juce::AudioSampleBuffer fileBuffer;
+    //int filePosition;
 
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
+
+    PluginLook chapaGranulatorLook;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChapaGranulatorAudioProcessorEditor)
 };
