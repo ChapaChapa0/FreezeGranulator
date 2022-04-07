@@ -18,8 +18,7 @@ public:
     Grain();
     ~Grain();
 
-    void process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuffer& fileBuffer, 
-                 int numChannels, int blockNumSamples, int fileNumSamples, int time);
+    void process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuffer& fileBuffer, int numChannels, int blockNumSamples, int fileNumSamples, int time);
     void updateValue();
 
 private:

@@ -28,6 +28,9 @@ Grain::~Grain()
 void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuffer& fileBuffer, int numChannels, int blockNumSamples, int fileNumSamples, int time)
 {
     int fileBufferNumChannels = fileBuffer.getNumChannels();
+
+    if (fileNumSamples == 0 || fileBufferNumChannels == 0) return;
+
     for (int channel = 0; channel < numChannels; ++channel) 
     {
         currentBlock.addSample(channel, time % blockNumSamples, fileBuffer.getSample(channel % fileBufferNumChannels, time % fileNumSamples));

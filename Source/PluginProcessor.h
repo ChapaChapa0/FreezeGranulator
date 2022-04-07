@@ -10,11 +10,12 @@
 
 #include <JuceHeader.h>
 #include "Grain.h"
+#include "ReferenceCountedBuffer.h"
 
 //==============================================================================
 /**
 */
-class ChapaGranulatorAudioProcessor  : public juce::AudioProcessor
+class ChapaGranulatorAudioProcessor  : public juce::AudioProcessor, private juce::Thread
 {
 public:
     //==============================================================================
@@ -56,15 +57,23 @@ public:
 
     //==============================================================================
     void updateValue();
+    void updateFile(juce::AudioFormatReader *reader);
     
     juce::MidiKeyboardState keyboardState;
-
     juce::String filePath;
 
 private:
+    void run() override;
+    void clearBuffer();
+    void checkForBuffersToFree();
+
     int time;
     Grain grain;
-    juce::AudioSampleBuffer& fileBuffer;
+
+    juce::SpinLock mutex;
+    juce::ReferenceCountedArray<ReferenceCountedBuffer> buffers;
+    ReferenceCountedBuffer::Ptr currentBuffer;
+
     juce::AudioProcessorValueTreeState parameters;    
 
     //==============================================================================

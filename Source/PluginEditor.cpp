@@ -23,17 +23,14 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     addAndMakeVisible(&openButton);
 
     formatManager.registerBasicFormats();
-    transportSource.addChangeListener(this);
     thumbnail.addChangeListener(this);
 
     // Set parameters bounds, id and name
     auto buttonsId = juce::StringArray("envelope1", "envelope2", "envelope3", "envelope4");
-    //auto buttonBounds = ((10, 10, 50, 50), (70, 10, 50, 50), (10, 70, 50, 50), (70, 70, 50, 50));
 
     auto slidersId = juce::StringArray("tune", "fine", "density", "position", "length", "level", "randTune",  "randDensity", "randPosition", "randLength", "randLevel");
     auto slidersText = juce::StringArray("tune", "fine", "density", "position", "length", "level", "r tune", "r density", "r position", "r length", "r level");
     auto slidersSuffix = juce::StringArray(" sts", " cents", "%", "", " ms", "%", "%", "%", "%", "%", "%");
-    //auto slidersBounds = ((10, 10, 50, 50), (70, 10, 50, 50), (10, 70, 50, 50), (70, 70, 50, 50));
 
     // Set the envelope buttons
     for (int i = 0; i < buttonsId.size(); ++i)
@@ -141,30 +138,20 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
 
             if (file != juce::File{})
             {
-                juce::String path(file.getFullPathName());
-                audioProcessor.filePath = path;
-
                 auto* reader = formatManager.createReaderFor(file);
 
                 if (reader != nullptr)
                 {
-                    auto newBuffer = std::make_unique<juce::AudioSampleBuffer>(reader->numChannels, reader->lengthInSamples);
-                    //reader->read(&newBuffer, 0, reader->lengthInSamples, 0, true, true);
-
-                    auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
-
-                    transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+                    juce::String path(file.getFullPathName());
+                    audioProcessor.filePath = path;
                     thumbnail.setSource(new juce::FileInputSource(file));
-                    readerSource.reset(newSource.release());
+
+                    audioProcessor.updateFile(reader);
                 }
             }
         });
 
     audioProcessor.updateValue();
-}
-
-void ChapaGranulatorAudioProcessorEditor::loadAudioFile(juce::String path)
-{
 }
 
 void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)

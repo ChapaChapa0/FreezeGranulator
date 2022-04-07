@@ -50,15 +50,19 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
         std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
-        }), grain(Grain())
+        }), grain(Grain()), juce::Thread("Background Thread")
 #endif
 {
     time = 0;
     Grain grain = *new Grain();
+
+    startThread();
 }
 
 ChapaGranulatorAudioProcessor::~ChapaGranulatorAudioProcessor()
 {
+    stopThread(4000);
+    clearBuffer();
 }
 
 //==============================================================================
@@ -171,15 +175,34 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    auto retainedCurrentBuffer = [&]() -> ReferenceCountedBuffer::Ptr               // [4]
+    {
+        const juce::SpinLock::ScopedTryLockType lock(mutex);
+
+        if (lock.isLocked())
+            return currentBuffer;
+
+        return nullptr;
+    }();
+
+    if (retainedCurrentBuffer == nullptr)                                           // [5]
+    {
+        buffer.clear();
+        return;
+    }
+
+    auto* currentAudioSampleBuffer = retainedCurrentBuffer->getAudioSampleBuffer(); // [6]
+    auto position = retainedCurrentBuffer->position;
+
     const int numSamplesInBlock = buffer.getNumSamples();
     const int numChannelsInBlock = buffer.getNumChannels();
-    const int numSamplesInFile = fileBuffer.getNumSamples();
+    const int numSamplesInFile = currentAudioSampleBuffer->getNumSamples();
 
     if (numSamplesInBlock == 0) return;
 
     for (int i = 0; i < numSamplesInBlock; ++i)
     {
-        grain.process(buffer, fileBuffer, numChannelsInBlock, numSamplesInBlock, numSamplesInFile, time);
+        grain.process(buffer, *currentAudioSampleBuffer, numChannelsInBlock, numSamplesInBlock, numSamplesInFile, time);
         ++time;
     }
 }
@@ -222,6 +245,52 @@ void ChapaGranulatorAudioProcessor::setStateInformation (const void* data, int s
 void ChapaGranulatorAudioProcessor::updateValue()
 {
 }
+
+void ChapaGranulatorAudioProcessor::updateFile(juce::AudioFormatReader *reader)
+{
+    auto file = juce::File(filePath);
+    //auto* reader = formatManager.createReaderFor(file);
+
+    jassert(file != juce::File{});
+
+    ReferenceCountedBuffer::Ptr newBuffer = new ReferenceCountedBuffer(file.getFileName(), (int)reader->numChannels, (int)reader->lengthInSamples);
+
+    reader->read(newBuffer->getAudioSampleBuffer(), 0, (int)reader->lengthInSamples, 0, true, true);
+
+    {
+        const juce::SpinLock::ScopedLockType lock(mutex);
+        currentBuffer = newBuffer;
+    }
+
+    buffers.add(newBuffer);
+}
+
+void ChapaGranulatorAudioProcessor::run()
+{
+    while (!threadShouldExit())
+    {
+        checkForBuffersToFree();
+        wait(500);
+    }
+}
+
+void ChapaGranulatorAudioProcessor::checkForBuffersToFree()
+{
+    for (auto i = buffers.size(); --i >= 0;)                           // [1]
+    {
+        ReferenceCountedBuffer::Ptr buffer(buffers.getUnchecked(i)); // [2]
+
+        if (buffer->getReferenceCount() == 2)                          // [3]
+            buffers.remove(i);
+    }
+}
+
+void ChapaGranulatorAudioProcessor::clearBuffer()
+{
+    const juce::SpinLock::ScopedLockType lock(mutex);
+    currentBuffer = nullptr;
+}
+
 
 //==============================================================================
 // This creates new instances of the plugin..

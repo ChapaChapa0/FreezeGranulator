@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="NwRgOp" name="ChapaGranulator">
     <GROUP id="{74594397-209F-7807-04EA-52BCD2292359}" name="Source">
+      <FILE id="yFp3Ik" name="ReferenceCountedBuffer.h" compile="0" resource="0"
+            file="Source/ReferenceCountedBuffer.h"/>
       <GROUP id="{C893A482-95D6-93E7-1FE6-21F43A33F184}" name="ImagesData">
         <FILE id="w8ka8L" name="WT_sawtooth_off.png" compile="0" resource="1"
               file="Images/WT_sawtooth_off.png"/>

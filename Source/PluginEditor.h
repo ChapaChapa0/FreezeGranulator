@@ -31,7 +31,6 @@ public:
     virtual void buttonClicked(juce::Button* button) override;
     virtual void buttonStateChanged(juce::Button* button) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
-    void loadAudioFile(juce::String path);
 
 private:
     void paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
@@ -55,11 +54,6 @@ private:
     std::unique_ptr<juce::FileChooser> chooser;
 
     juce::AudioFormatManager formatManager;
-    //juce::AudioSampleBuffer fileBuffer;
-    //int filePosition;
-
-    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
-    juce::AudioTransportSource transportSource;
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
 
