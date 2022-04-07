@@ -142,22 +142,29 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
             if (file != juce::File{})
             {
                 juce::String path(file.getFullPathName());
-                audioProcessor.chosenPath = path;
+                audioProcessor.filePath = path;
 
-            //    auto* reader = formatManager.createReaderFor(file);
+                auto* reader = formatManager.createReaderFor(file);
 
-            //    if (reader != nullptr)
-            //    {
-            //        auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
+                if (reader != nullptr)
+                {
+                    auto newBuffer = std::make_unique<juce::AudioSampleBuffer>(reader->numChannels, reader->lengthInSamples);
+                    //reader->read(&newBuffer, 0, reader->lengthInSamples, 0, true, true);
 
-            //        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-            //        thumbnail.setSource(new juce::FileInputSource(file));
-            //        readerSource.reset(newSource.release());
-            //    }
+                    auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
+
+                    transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+                    thumbnail.setSource(new juce::FileInputSource(file));
+                    readerSource.reset(newSource.release());
+                }
             }
         });
 
     audioProcessor.updateValue();
+}
+
+void ChapaGranulatorAudioProcessorEditor::loadAudioFile(juce::String path)
+{
 }
 
 void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)

@@ -31,6 +31,7 @@ public:
     virtual void buttonClicked(juce::Button* button) override;
     virtual void buttonStateChanged(juce::Button* button) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+    void loadAudioFile(juce::String path);
 
 private:
     void paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);

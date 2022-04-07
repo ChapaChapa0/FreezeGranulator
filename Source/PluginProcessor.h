@@ -59,12 +59,9 @@ public:
     
     juce::MidiKeyboardState keyboardState;
 
-private:
-    // Sample Path
     juce::String filePath;
-    juce::String restoredPath;
-    juce::String chosenPath;
 
+private:
     int time;
     Grain grain;
     juce::AudioSampleBuffer& fileBuffer;
