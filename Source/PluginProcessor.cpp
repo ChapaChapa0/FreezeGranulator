@@ -22,11 +22,6 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
     ),
     parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
         {
-        std::make_unique<juce::AudioParameterFloat>("attack", "Attack", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
-        std::make_unique<juce::AudioParameterFloat>("decay", "Decay", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
-        std::make_unique<juce::AudioParameterFloat>("sustain", "Sustain", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
-        std::make_unique<juce::AudioParameterFloat>("release", "Release", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 100.0f),
-
         std::make_unique<juce::AudioParameterFloat>("tune", "Coarse Pitch Tunning", juce::NormalisableRange<float>(0.0f, 48.0f, 1.0f), 24.0f),
         std::make_unique<juce::AudioParameterFloat>("fine", "Fine Pitch Tunning", juce::NormalisableRange<float>(-100.0f, 100.0f, 1.0f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTune", "Amount Random Tunning", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f),
@@ -50,13 +45,13 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
         std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
-        }), juce::Thread("Background Thread")
+        }), juce::Thread("Background Thread"), grain(Grain())
 #endif
 {
     time = 0;
     nextGrainOnset = 0;
     sampleRate = 44100;
-    Grain grain = *new Grain();
+    Grain grain = *new Grain(parameters);
 
     formatManager.registerBasicFormats();
     startThread();

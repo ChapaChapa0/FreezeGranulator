@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "EnvelopeButton.h"
+#include "ParametersObjects.h"
 #include "PluginLook.h"
 
 //==============================================================================

@@ -14,8 +14,13 @@
 class EnvelopeButton : public juce::ImageButton
 {
 public:
-    EnvelopeButton();
-    void setEnvelope(int);
+    EnvelopeButton() {}
+
+    void setEnvelope(int indexEnvelope)
+    {
+        setImages(true, true, true, imageOff[indexEnvelope], 1.0f, juce::Colours::transparentWhite, juce::Image(), 1.0f,
+            juce::Colours::transparentWhite, imageOn[indexEnvelope], 1.0f, juce::Colours::transparentWhite, 0.0f);
+    }
 
     juce::Image imageOn[4] =
     {

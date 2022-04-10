@@ -24,12 +24,10 @@
               file="Images/WT_triangle_on.png"/>
       </GROUP>
       <GROUP id="{6AF81939-01C3-D1D3-5580-D750750362CB}" name="GUI">
-        <FILE id="HI09qg" name="EnvelopeButton.cpp" compile="1" resource="0"
-              file="Source/EnvelopeButton.cpp"/>
-        <FILE id="vTR7Oq" name="EnvelopeButton.h" compile="0" resource="0"
-              file="Source/EnvelopeButton.h"/>
-        <FILE id="YymFvk" name="PluginLook.cpp" compile="1" resource="0" file="Source/PluginLook.cpp"/>
-        <FILE id="DoBAl3" name="PluginLook.h" compile="0" resource="0" file="Source/PluginLook.h"/>
+        <FILE id="OsRujU" name="ParametersObjects.h" compile="0" resource="0"
+              file="Source/ParametersObjects.h"/>
+        <FILE id="tsQRXN" name="PluginLook.cpp" compile="1" resource="0" file="Source/PluginLook.cpp"/>
+        <FILE id="aCkQ1i" name="PluginLook.h" compile="0" resource="0" file="Source/PluginLook.h"/>
       </GROUP>
       <FILE id="iQEbJZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

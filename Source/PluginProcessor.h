@@ -72,6 +72,7 @@ private:
     long long int time;
     long long int nextGrainOnset;
 
+    Grain grain;
     juce::Array<Grain> grainArray;
 
     juce::SpinLock mutex;
