@@ -13,7 +13,7 @@
 ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaGranulatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts), 
       keyboardComponent(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
-      thumbnailCache(5), thumbnail(512, formatManager, thumbnailCache)
+      thumbnailCache(5), thumbnail(512, audioProcessor.formatManager, thumbnailCache)
 {
     setLookAndFeel(&chapaGranulatorLook);
 
@@ -22,7 +22,6 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     openButton.setBounds(10, 300, 780, 20);
     addAndMakeVisible(&openButton);
 
-    formatManager.registerBasicFormats();
     thumbnail.addChangeListener(this);
 
     // Set parameters bounds, id and name
@@ -129,7 +128,7 @@ void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* butto
 
 void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
 {
-    chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
+    chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav", "*.aif", "*.aiff");
     auto chooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
 
     chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
@@ -138,16 +137,10 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
 
             if (file != juce::File{})
             {
-                auto* reader = formatManager.createReaderFor(file);
-
-                if (reader != nullptr)
-                {
-                    juce::String path(file.getFullPathName());
-                    audioProcessor.filePath = path;
-                    thumbnail.setSource(new juce::FileInputSource(file));
-
-                    audioProcessor.updateFile(reader);
-                }
+                juce::String path(file.getFullPathName());
+                audioProcessor.filePath = path;
+                thumbnail.setSource(new juce::FileInputSource(file));
+                audioProcessor.updateFile();
             }
         });
 

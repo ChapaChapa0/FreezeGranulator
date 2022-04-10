@@ -57,18 +57,22 @@ public:
 
     //==============================================================================
     void updateValue();
-    void updateFile(juce::AudioFormatReader *reader);
+    void updateFile();
     
     juce::MidiKeyboardState keyboardState;
     juce::String filePath;
+    juce::AudioFormatManager formatManager;
 
 private:
     void run() override;
     void clearBuffer();
     void checkForBuffersToFree();
 
-    int time;
-    Grain grain;
+    double sampleRate;
+    long long int time;
+    long long int nextGrainOnset;
+
+    juce::Array<Grain> grainArray;
 
     juce::SpinLock mutex;
     juce::ReferenceCountedArray<ReferenceCountedBuffer> buffers;

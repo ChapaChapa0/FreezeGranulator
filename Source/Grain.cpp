@@ -39,4 +39,9 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
 
 void Grain::updateValue()
 {
+    for (int i = 0; i < 4; ++i)
+    {
+        auto parameterEnvelope = params->getRawParameterValue(strs[i]);
+        if (*parameterEnvelope > 0.5f) envelopeId = i;
+    }
 }

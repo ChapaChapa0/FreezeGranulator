@@ -50,12 +50,15 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
         std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
-        }), grain(Grain()), juce::Thread("Background Thread")
+        }), juce::Thread("Background Thread")
 #endif
 {
     time = 0;
+    nextGrainOnset = 0;
+    sampleRate = 44100;
     Grain grain = *new Grain();
 
+    formatManager.registerBasicFormats();
     startThread();
 }
 
@@ -128,10 +131,9 @@ void ChapaGranulatorAudioProcessor::changeProgramName (int index, const juce::St
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void ChapaGranulatorAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
 {
-    //synth.setCurrentPlaybackSampleRate(sampleRate);
-    //keyboardState.reset();
+    sampleRate = newSampleRate;
 }
 
 void ChapaGranulatorAudioProcessor::releaseResources()
@@ -175,7 +177,7 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    auto retainedCurrentBuffer = [&]() -> ReferenceCountedBuffer::Ptr               // [4]
+    auto retainedCurrentBuffer = [&]() -> ReferenceCountedBuffer::Ptr
     {
         const juce::SpinLock::ScopedTryLockType lock(mutex);
 
@@ -185,13 +187,13 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
         return nullptr;
     }();
 
-    if (retainedCurrentBuffer == nullptr)                                           // [5]
+    if (retainedCurrentBuffer == nullptr)
     {
         buffer.clear();
         return;
     }
 
-    auto* currentAudioSampleBuffer = retainedCurrentBuffer->getAudioSampleBuffer(); // [6]
+    auto* currentAudioSampleBuffer = retainedCurrentBuffer->getAudioSampleBuffer();
     auto position = retainedCurrentBuffer->position;
 
     const int numSamplesInBlock = buffer.getNumSamples();
@@ -246,23 +248,26 @@ void ChapaGranulatorAudioProcessor::updateValue()
 {
 }
 
-void ChapaGranulatorAudioProcessor::updateFile(juce::AudioFormatReader *reader)
+void ChapaGranulatorAudioProcessor::updateFile()
 {
     auto file = juce::File(filePath);
-    //auto* reader = formatManager.createReaderFor(file);
-
     jassert(file != juce::File{});
 
-    ReferenceCountedBuffer::Ptr newBuffer = new ReferenceCountedBuffer(file.getFileName(), (int)reader->numChannels, (int)reader->lengthInSamples);
+    std::unique_ptr<juce::AudioFormatReader> reader (formatManager.createReaderFor(file));
 
-    reader->read(newBuffer->getAudioSampleBuffer(), 0, (int)reader->lengthInSamples, 0, true, true);
-
+    if (reader != nullptr)
     {
-        const juce::SpinLock::ScopedLockType lock(mutex);
-        currentBuffer = newBuffer;
-    }
+        ReferenceCountedBuffer::Ptr newBuffer = new ReferenceCountedBuffer(file.getFileName(), (int)reader->numChannels, (int)reader->lengthInSamples);
 
-    buffers.add(newBuffer);
+        reader->read(newBuffer->getAudioSampleBuffer(), 0, (int)reader->lengthInSamples, 0, true, true);
+
+        {
+            const juce::SpinLock::ScopedLockType lock(mutex);
+            currentBuffer = newBuffer;
+        }
+
+        buffers.add(newBuffer);
+    }
 }
 
 void ChapaGranulatorAudioProcessor::run()
