@@ -11,28 +11,16 @@
 #include "Grain.h"
 
 
-Grain::Grain(int onset, int length, int startPos, juce::AudioProcessorValueTreeState& args) : onset(onset), length(length), startPosition(startPos), params(&args)
+Grain::Grain(long long int onset, int length, int level, int startPos, int envId) : onset(onset), length(length), level(level), startPosition(startPos), envelopeId(envId)
 {
-    updateValue();
-    initEnvelopeValues();
-}
-
-Grain::Grain(juce::AudioProcessorValueTreeState& args) : params(&args)
-{
-    onset, length, startPosition = 0;
-
-    updateValue();
     initEnvelopeValues();
 }
 
 Grain::Grain()
 {
-    onset, length, startPosition = 0;
+    onset, length, level, startPosition, envelopeId = 0;
 
-    params = nullptr;
-    paramAmplitude, paramLength, paramAmplitudeR, paramLengthR = 0.0f;
-    amp, rdur, rdur2, slope, curve = 0.0;
-    envelopeId = 0;
+    initEnvelopeValues();
 }
 
 Grain::~Grain()
@@ -56,27 +44,13 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
     }
 }
 
-void Grain::updateValue()
-{
-    paramAmplitude = *(params->getRawParameterValue(strs[0]));
-    paramLength = *(params->getRawParameterValue(strs[1]));
-    paramAmplitudeR = *(params->getRawParameterValue(strs[2]));
-    paramLengthR = *(params->getRawParameterValue(strs[3]));
-
-    for (int i = 0; i < 4; ++i)
-    {
-        auto grainEnvelope = params->getRawParameterValue(strs[i + 4]);
-        if (*grainEnvelope > 0.5f) envelopeId = i;
-    }
-}
-
 void Grain::initEnvelopeValues()
 {
-    jassert(paramLength > 0.0f);
+    jassert(length > 0);
 
     amp = 0.0;
-    rdur = 1.0 / paramLength;
+    rdur = 1.0 / length;
     rdur2 = rdur * rdur;
-    slope = 4.0 * paramAmplitude * (rdur - rdur2);
-    curve = -8.0 * paramAmplitude * rdur2;
+    slope = 4.0 * level * (rdur - rdur2);
+    curve = -8.0 * level * rdur2;
 }

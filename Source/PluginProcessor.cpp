@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <iostream>
 
 //==============================================================================
 ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
@@ -26,13 +27,13 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("fine", "Fine Pitch Tunning", juce::NormalisableRange<float>(-100.0f, 100.0f, 1.0f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTune", "Amount Random Tunning", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("density", "Number of Grains", juce::NormalisableRange<float>(0.1f, 100.0f, 0.1f, 1.0f), 5.0f),
-        std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("density", "Density of Grains", juce::NormalisableRange<float>(1.0f, 1000.0f, 0.1f, 1.0f), 10.0f),
+        std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Density", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(10.0f, 10000.0f, 1.0f, 0.4f), 200.0f),
+        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.4f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
@@ -45,13 +46,12 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
         std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
-        }), juce::Thread("Background Thread"), grain(Grain())
+        }), juce::Thread("Background Thread")
 #endif
 {
     time = 0;
     nextGrainOnset = 0;
     sampleRate = 44100;
-    Grain grain = *new Grain(parameters);
 
     formatManager.registerBasicFormats();
     startThread();
@@ -126,9 +126,9 @@ void ChapaGranulatorAudioProcessor::changeProgramName (int index, const juce::St
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
+void ChapaGranulatorAudioProcessor::prepareToPlay (double initSampleRate, int samplesPerBlock)
 {
-    sampleRate = newSampleRate;
+    sampleRate = initSampleRate;
 }
 
 void ChapaGranulatorAudioProcessor::releaseResources()
@@ -199,7 +199,10 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
     for (int i = 0; i < numSamplesInBlock; ++i)
     {
-        grain.process(buffer, *currentAudioSampleBuffer, numChannelsInBlock, numSamplesInBlock, numSamplesInFile, time);
+        for (int j = 0; j < grainArray.size(); ++j)
+        {
+            grainArray[j].process(buffer, *currentAudioSampleBuffer, numChannelsInBlock, numSamplesInBlock, numSamplesInFile, time);
+        }
         ++time;
     }
 }
@@ -265,12 +268,56 @@ void ChapaGranulatorAudioProcessor::updateFile()
     }
 }
 
+void ChapaGranulatorAudioProcessor::addGrain()
+{
+
+}
+
 void ChapaGranulatorAudioProcessor::run()
 {
     while (!threadShouldExit())
     {
         checkForBuffersToFree();
-        wait(500);
+
+        // Delete grains
+        if (grainArray.size() > 0) {
+            for (int i = grainArray.size() - 1; i >= 0; --i) {
+                // Check if the grain has ended
+                long long int grainEnd = grainArray[i].onset + grainArray[i].length;
+                bool hasEnded = grainEnd < time;
+
+                if (hasEnded)
+                {
+                    grainArray.remove(i);
+                    numGrains++;
+                }
+            }
+        }
+
+        // Add grains
+        int numGrainsToAdd = numGrains - grainArray.size();
+        for (int i = 0; i < numGrainsToAdd; ++i)
+        {
+            if (grainArray.size() < 10)
+            {
+                //float level = *(parameters.getRawParameterValue("level"));
+                //float position = *(parameters.getRawParameterValue("position"));
+                //float length = *(parameters.getRawParameterValue("length"));
+                //float randLevel = *(parameters.getRawParameterValue("randLevel"));
+                //float randPosition = *(parameters.getRawParameterValue("randPosition"));
+                //float randLength = *(parameters.getRawParameterValue("randLength"));
+                //int envelopeId = (int)*(parameters.getRawParameterValue("envelopeId"));
+
+                //int lengthInSamples = int(length / 1000.0 * sampleRate);
+                //long long int onset = time;
+
+                //Grain grain = *new Grain(onset, lengthInSamples, level, position, envelopeId);
+                //grainArray.add(grain);
+                std::cout << "Ok Ok" << std::endl;
+            }
+        }
+
+        wait(100);
     }
 }
 

@@ -53,6 +53,9 @@ private:
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
 
+    juce::TextButton grainButton;
+    juce::Label numGrainsLabel;
+
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
 

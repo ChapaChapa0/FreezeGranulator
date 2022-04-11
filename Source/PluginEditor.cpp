@@ -29,7 +29,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
 
     auto slidersId = juce::StringArray("tune", "fine", "density", "position", "length", "level", "randTune",  "randDensity", "randPosition", "randLength", "randLevel");
     auto slidersText = juce::StringArray("tune", "fine", "density", "position", "length", "level", "r tune", "r density", "r position", "r length", "r level");
-    auto slidersSuffix = juce::StringArray(" sts", " cents", "%", "", " ms", "%", "%", "%", "%", "%", "%");
+    auto slidersSuffix = juce::StringArray(" sts", " cnts", "x", "x", " ms", "x", "%", "%", "%", "%", "%");
 
     // Set the envelope buttons
     for (int i = 0; i < buttonsId.size(); ++i)
@@ -56,6 +56,15 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         parameterSliders[i].setBounds(180 + (i % 6) * 100, 40 + int(i / 6) * 140, 100, 100);
         addAndMakeVisible(&parameterSliders[i]);
     }
+
+    grainButton.setButtonText("Add Grain");
+    grainButton.addListener(this);
+    grainButton.setBounds(10, 200, 100, 20);
+    addAndMakeVisible(&grainButton);
+
+    numGrainsLabel.setText(juce::String(audioProcessor.numGrains), juce::dontSendNotification);
+    numGrainsLabel.setBounds(10, 250, 100, 20);
+    addAndMakeVisible(&numGrainsLabel);
     
     setSize (800, 600);
 }
@@ -119,6 +128,11 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
     button->repaint();
     if (button == &openButton) openButtonClicked();
+    if (button == &grainButton)
+    {
+        audioProcessor.numGrains++;
+        numGrainsLabel.setText(juce::String(audioProcessor.numGrains), juce::dontSendNotification);
+    }
 }
 
 void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
