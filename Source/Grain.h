@@ -14,20 +14,24 @@
 class Grain
 {
 public:
-    Grain(long long int onset, int length, int amplitude, int startPos, int envelopeId);
+    Grain(long long int onset, int length, float level, float startPos, int envelopeId);
     Grain();
     ~Grain();
 
-    void envelope(int time);
+    float envelope(int time);
     void process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuffer& fileBuffer, int numChannels, int blockNumSamples, int fileNumSamples, int time);
-    void initEnvelopeValues();
+    //void initEnvelopeValues();
 
     long long int onset;
-    int length, level, startPosition, envelopeId;
+    int length, envelopeId;
+    float level, startPosition;
 
 private:
-    double amp, rdur, rdur2, slope, curve;
+    float hamming_window(int n, int N);
+    float triangular_window(int n, int N);
+    float rectangular_window(int n, int N);
+
+    //double amp, rdur, rdur2, slope, curve;
 
     double levelMidiNote = 0.0;
-    juce::AudioProcessorValueTreeState* params;
 };

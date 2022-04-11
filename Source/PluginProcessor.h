@@ -58,7 +58,6 @@ public:
     //==============================================================================
     void updateValue();
     void updateFile();
-    void addGrain();
     
     juce::MidiKeyboardState keyboardState;
     juce::String filePath;
@@ -70,6 +69,8 @@ public:
     int numGrains = 0;
 
 private:
+    juce::Random random;
+
     void run() override;
     void clearBuffer();
     void checkForBuffersToFree();

@@ -33,7 +33,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
-        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.4f), 50.0f),
+        std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.3f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
@@ -268,11 +268,6 @@ void ChapaGranulatorAudioProcessor::updateFile()
     }
 }
 
-void ChapaGranulatorAudioProcessor::addGrain()
-{
-
-}
-
 void ChapaGranulatorAudioProcessor::run()
 {
     while (!threadShouldExit())
@@ -286,34 +281,50 @@ void ChapaGranulatorAudioProcessor::run()
                 long long int grainEnd = grainArray[i].onset + grainArray[i].length;
                 bool hasEnded = grainEnd < time;
 
-                if (hasEnded)
-                {
-                    grainArray.remove(i);
-                    numGrains++;
-                }
+                if (hasEnded) grainArray.remove(i);
             }
         }
 
         // Add grains
-        int numGrainsToAdd = numGrains - grainArray.size();
-        for (int i = 0; i < numGrainsToAdd; ++i)
+        for (int i = 0; i < numGrains; ++i)
         {
             if (grainArray.size() < 10)
             {
-                //float level = *(parameters.getRawParameterValue("level"));
-                //float position = *(parameters.getRawParameterValue("position"));
-                //float length = *(parameters.getRawParameterValue("length"));
-                //float randLevel = *(parameters.getRawParameterValue("randLevel"));
-                //float randPosition = *(parameters.getRawParameterValue("randPosition"));
-                //float randLength = *(parameters.getRawParameterValue("randLength"));
-                //int envelopeId = (int)*(parameters.getRawParameterValue("envelopeId"));
+                // Get all parameters from buttons and sliders
+                float level = *(parameters.getRawParameterValue("level"));
+                float position = *(parameters.getRawParameterValue("position"));
+                float length = *(parameters.getRawParameterValue("length"));
+                float randLevel = *(parameters.getRawParameterValue("randLevel"));
+                float randPosition = *(parameters.getRawParameterValue("randPosition"));
+                float randLength = *(parameters.getRawParameterValue("randLength"));
+                int envelopeId = 0;
+                for (i = 1; i < 4; ++i)
+                {
+                    float envelope_i = *(parameters.getRawParameterValue("envelope" + juce::String(i + 1)));
+                    if (envelope_i > 0.5f) envelopeId = i;
+                }
 
-                //int lengthInSamples = int(length / 1000.0 * sampleRate);
-                //long long int onset = time;
+                // Compute real parameters values for this particular grain
+                float grainLevel = level / 100.0f + (2.0f * (0.5f - random.nextFloat()) * randLevel / 100.0f);
+                grainLevel = juce::jmin(1.0f, juce::jmax(0.0f, grainLevel));
 
-                //Grain grain = *new Grain(onset, lengthInSamples, level, position, envelopeId);
-                //grainArray.add(grain);
-                std::cout << "Ok Ok" << std::endl;
+                float grainPosition = position + (2.0f * (0.5f - random.nextFloat()) * randPosition);
+                grainPosition = juce::jmin(1.0f, juce::jmax(0.0f, grainPosition));
+
+                float grainLength = length + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randLength, 3.33)) * 10000.0f;
+                grainLength = juce::jmin(10000.0f, juce::jmax(1.0f, grainLength));
+
+                int grainEnvelopeId = envelopeId;
+                if (envelopeId == 3) grainEnvelopeId = random.nextInt(3);
+
+                int grainLengthInSamples = int(grainLength / 1000.0 * sampleRate);
+                long long int onset = time;
+
+                // Add grain to the total of grains
+                Grain grain = *new Grain(onset, grainLengthInSamples, grainLevel, grainPosition, grainEnvelopeId);
+                grainArray.add(grain);
+
+                numGrains--;
             }
         }
 
