@@ -22,20 +22,24 @@ public:
             juce::Colours::transparentWhite, imageOn[indexEnvelope], 1.0f, juce::Colours::transparentWhite, 0.0f);
     }
 
-    juce::Image imageOn[4] =
+    juce::Image imageOn[6] =
     {
-        juce::ImageCache::getFromMemory(BinaryData::WT_sinus_on_png, BinaryData::WT_sinus_on_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_square_on_png, BinaryData::WT_square_on_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_triangle_on_png, BinaryData::WT_triangle_on_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_sawtooth_on_png, BinaryData::WT_sawtooth_on_pngSize)
+        juce::ImageCache::getFromMemory(BinaryData::env_sine_on_png, BinaryData::env_sine_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_triangle_on_png, BinaryData::env_triangle_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rectangle_on_png, BinaryData::env_rectangle_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rampup_on_png, BinaryData::env_rampup_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rampdown_on_png, BinaryData::env_rampdown_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_random_on_png, BinaryData::env_random_on_pngSize)
     };
 
-    juce::Image imageOff[4] =
+    juce::Image imageOff[6] =
     {
-        juce::ImageCache::getFromMemory(BinaryData::WT_sinus_off_png, BinaryData::WT_sinus_off_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_square_off_png, BinaryData::WT_square_off_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_triangle_off_png, BinaryData::WT_triangle_off_pngSize),
-        juce::ImageCache::getFromMemory(BinaryData::WT_sawtooth_off_png, BinaryData::WT_sawtooth_off_pngSize)
+        juce::ImageCache::getFromMemory(BinaryData::env_sine_off_png, BinaryData::env_sine_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_triangle_off_png, BinaryData::env_triangle_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rectangle_off_png, BinaryData::env_rectangle_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rampup_off_png, BinaryData::env_rampup_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_rampdown_off_png, BinaryData::env_rampdown_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::env_random_off_png, BinaryData::env_random_off_pngSize)
     };
 
 private:

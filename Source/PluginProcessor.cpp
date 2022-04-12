@@ -39,10 +39,12 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
         std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
 
-        std::make_unique<juce::AudioParameterBool>("envelope1", "Envelope 1 Grains", true),
-        std::make_unique<juce::AudioParameterBool>("envelope2", "Envelope 2 Grains", false),
-        std::make_unique<juce::AudioParameterBool>("envelope3", "Envelope 3 Grains", false),
-        std::make_unique<juce::AudioParameterBool>("envelope4", "Envelope 4 Grains", false),
+        std::make_unique<juce::AudioParameterBool>("envelopeSine", "Grain Envelope Sine", true),
+        std::make_unique<juce::AudioParameterBool>("envelopeTriangle", "Grain Envelope Triangle", false),
+        std::make_unique<juce::AudioParameterBool>("envelopeRectangle", "Grain Envelope Rectangle", false),
+        std::make_unique<juce::AudioParameterBool>("envelopeRampUp", "Grain Envelope Ramp Up", false),
+        std::make_unique<juce::AudioParameterBool>("envelopeRampDown", "Grain Envelope Ramp Down", false),
+        std::make_unique<juce::AudioParameterBool>("envelopeRandom", "Grain Envelope Random", false),
 
         std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
@@ -298,9 +300,9 @@ void ChapaGranulatorAudioProcessor::run()
                 float randPosition = *(parameters.getRawParameterValue("randPosition"));
                 float randLength = *(parameters.getRawParameterValue("randLength"));
                 int envelopeId = 0;
-                for (i = 1; i < 4; ++i)
+                for (i = 1; i < 6; ++i)
                 {
-                    float envelope_i = *(parameters.getRawParameterValue("envelope" + juce::String(i + 1)));
+                    float envelope_i = *(parameters.getRawParameterValue(buttonsId[i]));
                     if (envelope_i > 0.5f) envelopeId = i;
                 }
 
@@ -315,10 +317,10 @@ void ChapaGranulatorAudioProcessor::run()
                 grainLength = juce::jmin(10000.0f, juce::jmax(1.0f, grainLength));
 
                 int grainEnvelopeId = envelopeId;
-                if (envelopeId == 3) grainEnvelopeId = random.nextInt(3);
+                if (envelopeId == 5) grainEnvelopeId = random.nextInt(5);
 
                 int grainLengthInSamples = int(grainLength / 1000.0 * sampleRate);
-                long long int onset = time;
+                long long int onset = time + 200;
 
                 // Add grain to the total of grains
                 Grain grain = *new Grain(onset, grainLengthInSamples, grainLevel, grainPosition, grainEnvelopeId);

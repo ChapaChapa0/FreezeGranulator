@@ -44,10 +44,10 @@ private:
     juce::AudioProcessorValueTreeState& valueTreeState;
     juce::MidiKeyboardComponent keyboardComponent;
 
-    EnvelopeButton envelopeButtons[4];
+    EnvelopeButton envelopeButtons[6];
     juce::Slider parameterSliders[11];
     juce::Label parameterLabels[11];
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[4];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[11];
 
     juce::TextButton openButton;

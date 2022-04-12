@@ -13,14 +13,15 @@
 
 Grain::Grain(long long int onset, int length, float level, float startPos, int envId) : onset(onset), length(length), level(level), startPosition(startPos), envelopeId(envId)
 {
-    //initEnvelopeValues();
 }
 
 Grain::Grain()
 {
-    onset, length, level, startPosition, envelopeId = 0;
-
-    //initEnvelopeValues();
+    onset = 0; 
+    length = 0;
+    envelopeId = 0;
+    level = 0.0f;
+    startPosition = 0.0f;
 }
 
 Grain::~Grain()
@@ -30,14 +31,15 @@ Grain::~Grain()
 float Grain::envelope(int time)
 {
     float valueEnv;
-    int timeEnv = time - onset;
-    if (timeEnv > length || timeEnv < 0) valueEnv = 0;
+    if (time > length || time < 0) valueEnv = 0;
 
     else
     {
-        if (envelopeId == 1) valueEnv = triangular_window(timeEnv, length);
-        else if (envelopeId == 2) valueEnv = rectangular_window(timeEnv, length);
-        else valueEnv = hamming_window(timeEnv, length);
+        if (envelopeId == 1) valueEnv = triangularWindow(time, length);
+        else if (envelopeId == 2) valueEnv = rectangularWindow(time, length);
+        else if (envelopeId == 3) valueEnv = rampUpWindow(time, length);
+        else if (envelopeId == 4) valueEnv = rampDownWindow(time, length);
+        else valueEnv = hammingWindow(time, length);
     }
 
     return valueEnv;
@@ -49,40 +51,49 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
 
     if (fileNumSamples == 0 || fileBufferNumChannels == 0) return;
 
+    int timeGrain = time - onset;
+
     for (int channel = 0; channel < numChannels; ++channel)
     {
-        int actualStartPosition = juce::jmin(int(startPosition * fileNumSamples), int(fileNumSamples - length));
-        int currentPosition = juce::jmax(actualStartPosition, (actualStartPosition + time) % fileNumSamples);
+        int startPositionInSamples = juce::jmax(0, int(startPosition * fileNumSamples - 1));
+        int currentPosition = juce::jmax(startPositionInSamples, (startPositionInSamples + timeGrain) % fileNumSamples);
         float sample = fileBuffer.getSample(channel % fileBufferNumChannels, currentPosition);
 
-        currentBlock.addSample(channel, time % blockNumSamples, sample * envelope(time) * level);
+        currentBlock.addSample(channel, time % blockNumSamples, sample * envelope(timeGrain) * level * 0.2);
     }
 }
 
-//void Grain::initEnvelopeValues()
-//{
-//    jassert(length > 0);
-//
-//    amp = 0.0;
-//    rdur = 1.0 / length;
-//    rdur2 = rdur * rdur;
-//    slope = 4.0 * level * (rdur - rdur2);
-//    curve = -8.0 * level * rdur2;
-//}
+float Grain::hannWindow(int n, int N)
+{
+    return 0.5 * (1.0 - cos(2.0 * juce::MathConstants<double>::pi * n / N));
+}
 
-float Grain::hamming_window(int n, int N)
+float Grain::hammingWindow(int n, int N)
 {
     return 0.54 - 0.46 * cos(2.0 * juce::MathConstants<double>::pi * n / N);
 }
 
-float Grain::triangular_window(int n, int N)
+float Grain::triangularWindow(int n, int N)
 {
-    return (n < N / 2) ? 2.0 * n / N : 1.0 - 2.0 * n / N;
+    return (n < N / 2) ? 2.0 * n / N : 1.0 - 2.0 * (n - N / 2.0) / N;
 }
 
-float Grain::rectangular_window(int n, int N)
+float Grain::rectangularWindow(int n, int N)
 {
-    if (n < N / 10) return 2.0 * n / N;
-    else if (n > 9 * N / 10) return 1.0 - 2.0 * n / N;
+    double coeff = 10.0;
+    if (n < N / coeff) return coeff * n / N;
+    else if (n > (coeff - 1) * N / coeff) return 1.0 - coeff * (n - (coeff - 1.0) * N / coeff) / N;
     else return 1.0;
+}
+
+float Grain::rampUpWindow(int n, int N)
+{
+    double coeff = 20.0;
+    if (n < (coeff - 1) * N / coeff) return (exp(n * coeff / ((coeff - 1.0) * N)) - 1.0) / (exp(1.0) - 1.0);
+    else return 1.0 - coeff * (n - (coeff - 1.0) * N / coeff) / N;
+}
+
+float Grain::rampDownWindow(int n, int N)
+{
+    return rampUpWindow(N - 1 - n, N);
 }

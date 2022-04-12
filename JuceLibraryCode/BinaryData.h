@@ -8,32 +8,44 @@
 
 namespace BinaryData
 {
-    extern const char*   WT_sawtooth_off_png;
-    const int            WT_sawtooth_off_pngSize = 3229;
+    extern const char*   env_rampdown_off_png;
+    const int            env_rampdown_off_pngSize = 3641;
 
-    extern const char*   WT_sawtooth_on_png;
-    const int            WT_sawtooth_on_pngSize = 3425;
+    extern const char*   env_rampdown_on_png;
+    const int            env_rampdown_on_pngSize = 3554;
 
-    extern const char*   WT_sinus_off_png;
-    const int            WT_sinus_off_pngSize = 3901;
+    extern const char*   env_rampup_off_png;
+    const int            env_rampup_off_pngSize = 3615;
 
-    extern const char*   WT_sinus_on_png;
-    const int            WT_sinus_on_pngSize = 4286;
+    extern const char*   env_rampup_on_png;
+    const int            env_rampup_on_pngSize = 3550;
 
-    extern const char*   WT_square_off_png;
-    const int            WT_square_off_pngSize = 2522;
+    extern const char*   env_random_off_png;
+    const int            env_random_off_pngSize = 4038;
 
-    extern const char*   WT_square_on_png;
-    const int            WT_square_on_pngSize = 2622;
+    extern const char*   env_random_on_png;
+    const int            env_random_on_pngSize = 3991;
 
-    extern const char*   WT_triangle_off_png;
-    const int            WT_triangle_off_pngSize = 3720;
+    extern const char*   env_rectangle_off_png;
+    const int            env_rectangle_off_pngSize = 4027;
 
-    extern const char*   WT_triangle_on_png;
-    const int            WT_triangle_on_pngSize = 4129;
+    extern const char*   env_rectangle_on_png;
+    const int            env_rectangle_on_pngSize = 3955;
+
+    extern const char*   env_sine_off_png;
+    const int            env_sine_off_pngSize = 4397;
+
+    extern const char*   env_sine_on_png;
+    const int            env_sine_on_pngSize = 4167;
+
+    extern const char*   env_triangle_off_png;
+    const int            env_triangle_off_pngSize = 3326;
+
+    extern const char*   env_triangle_on_png;
+    const int            env_triangle_on_pngSize = 3288;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 8;
+    const int namedResourceListSize = 12;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

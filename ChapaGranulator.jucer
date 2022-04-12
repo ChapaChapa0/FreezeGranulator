@@ -7,26 +7,33 @@
       <FILE id="yFp3Ik" name="ReferenceCountedBuffer.h" compile="0" resource="0"
             file="Source/ReferenceCountedBuffer.h"/>
       <GROUP id="{C893A482-95D6-93E7-1FE6-21F43A33F184}" name="ImagesData">
-        <FILE id="w8ka8L" name="WT_sawtooth_off.png" compile="0" resource="1"
-              file="Images/WT_sawtooth_off.png"/>
-        <FILE id="eWifj3" name="WT_sawtooth_on.png" compile="0" resource="1"
-              file="Images/WT_sawtooth_on.png"/>
-        <FILE id="HpXqrJ" name="WT_sinus_off.png" compile="0" resource="1"
-              file="Images/WT_sinus_off.png"/>
-        <FILE id="uFLg9e" name="WT_sinus_on.png" compile="0" resource="1" file="Images/WT_sinus_on.png"/>
-        <FILE id="x8csoU" name="WT_square_off.png" compile="0" resource="1"
-              file="Images/WT_square_off.png"/>
-        <FILE id="o9IZGf" name="WT_square_on.png" compile="0" resource="1"
-              file="Images/WT_square_on.png"/>
-        <FILE id="bkzYVM" name="WT_triangle_off.png" compile="0" resource="1"
-              file="Images/WT_triangle_off.png"/>
-        <FILE id="MTcnAr" name="WT_triangle_on.png" compile="0" resource="1"
-              file="Images/WT_triangle_on.png"/>
+        <FILE id="GDTQr9" name="env_rampdown_off.png" compile="0" resource="1"
+              file="Images/env_rampdown_off.png"/>
+        <FILE id="ANtGhy" name="env_rampdown_on.png" compile="0" resource="1"
+              file="Images/env_rampdown_on.png"/>
+        <FILE id="eTWlh5" name="env_rampup_off.png" compile="0" resource="1"
+              file="Images/env_rampup_off.png"/>
+        <FILE id="j4k7AO" name="env_rampup_on.png" compile="0" resource="1"
+              file="Images/env_rampup_on.png"/>
+        <FILE id="Oya85u" name="env_random_off.png" compile="0" resource="1"
+              file="Images/env_random_off.png"/>
+        <FILE id="MBGbnY" name="env_random_on.png" compile="0" resource="1"
+              file="Images/env_random_on.png"/>
+        <FILE id="xIjGt9" name="env_rectangle_off.png" compile="0" resource="1"
+              file="Images/env_rectangle_off.png"/>
+        <FILE id="e6Q8N3" name="env_rectangle_on.png" compile="0" resource="1"
+              file="Images/env_rectangle_on.png"/>
+        <FILE id="obL1DU" name="env_sine_off.png" compile="0" resource="1"
+              file="Images/env_sine_off.png"/>
+        <FILE id="S3Mzyi" name="env_sine_on.png" compile="0" resource="1" file="Images/env_sine_on.png"/>
+        <FILE id="ioz43h" name="env_triangle_off.png" compile="0" resource="1"
+              file="Images/env_triangle_off.png"/>
+        <FILE id="dyWuXv" name="env_triangle_on.png" compile="0" resource="1"
+              file="Images/env_triangle_on.png"/>
       </GROUP>
       <GROUP id="{6AF81939-01C3-D1D3-5580-D750750362CB}" name="GUI">
         <FILE id="OsRujU" name="ParametersObjects.h" compile="0" resource="0"
               file="Source/ParametersObjects.h"/>
-        <FILE id="tsQRXN" name="PluginLook.cpp" compile="1" resource="0" file="Source/PluginLook.cpp"/>
         <FILE id="aCkQ1i" name="PluginLook.h" compile="0" resource="0" file="Source/PluginLook.h"/>
       </GROUP>
       <FILE id="iQEbJZ" name="PluginProcessor.cpp" compile="1" resource="0"

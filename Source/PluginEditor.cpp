@@ -25,7 +25,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     thumbnail.addChangeListener(this);
 
     // Set parameters bounds, id and name
-    auto buttonsId = juce::StringArray("envelope1", "envelope2", "envelope3", "envelope4");
+    auto buttonsId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
 
     auto slidersId = juce::StringArray("tune", "fine", "density", "position", "length", "level", "randTune",  "randDensity", "randPosition", "randLength", "randLevel");
     auto slidersText = juce::StringArray("tune", "fine", "density", "position", "length", "level", "r tune", "r density", "r position", "r length", "r level");
@@ -39,7 +39,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         envelopeButtons[i].setClickingTogglesState(true);
         envelopeButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
         envelopeButtons[i].addListener(this);
-        envelopeButtons[i].setBounds(10 + (i % 2) * 60, 40 + int(i / 2) * 60, 50, 50);
+        envelopeButtons[i].setBounds(10 + (i % 3) * 60, 40 + int(i / 3) * 60, 50, 50);
         addAndMakeVisible(&envelopeButtons[i]);
     }
 
@@ -53,7 +53,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         parameterSliders[i].setTextBoxIsEditable(false);
         parameterSliders[i].setTextValueSuffix(slidersSuffix[i]);
         parameterSliders[i].addListener(this);
-        parameterSliders[i].setBounds(180 + (i % 6) * 100, 40 + int(i / 6) * 140, 100, 100);
+        parameterSliders[i].setBounds(190 + (i % 6) * 100, 40 + int(i / 6) * 140, 100, 100);
         addAndMakeVisible(&parameterSliders[i]);
     }
 

@@ -81,6 +81,7 @@ private:
     juce::ReferenceCountedArray<ReferenceCountedBuffer> buffers;
     ReferenceCountedBuffer::Ptr currentBuffer;
 
+    juce::StringArray buttonsId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
     juce::AudioProcessorValueTreeState parameters;    
 
     //==============================================================================
