@@ -45,16 +45,15 @@ private:
     juce::MidiKeyboardComponent keyboardComponent;
 
     EnvelopeButton envelopeButtons[6];
-    juce::Slider parameterSliders[11];
-    juce::Label parameterLabels[11];
+    juce::Slider parameterSliders[10];
+    juce::Label parameterLabels[10];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[11];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[10];
 
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
 
-    juce::TextButton grainButton;
-    juce::Label numGrainsLabel;
+    juce::TextButton playButton;
 
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;

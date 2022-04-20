@@ -66,7 +66,9 @@ public:
     double sampleRate;
     long long int time;
     long long int nextGrainOnset;
+
     int numGrains = 0;
+    bool play = false;
 
 private:
     juce::Random random;
