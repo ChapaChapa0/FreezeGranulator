@@ -14,7 +14,7 @@
 class Grain
 {
 public:
-    Grain(long long int onset, int length, float level, float startPos, int envelopeId);
+    Grain(long long int onset, int length, float level, float startPos, float panning, float transpose, int envelopeId);
     Grain();
     ~Grain();
 
@@ -23,7 +23,7 @@ public:
 
     long long int onset;
     int length, envelopeId;
-    float level, startPosition;
+    float level, startPosition, panning, rate;
 
 private:
     float hannWindow(int n, int N);

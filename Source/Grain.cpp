@@ -11,7 +11,8 @@
 #include "Grain.h"
 
 
-Grain::Grain(long long int onset, int length, float level, float startPos, int envId) : onset(onset), length(length), level(level), startPosition(startPos), envelopeId(envId)
+Grain::Grain(long long int onset, int length, float level, float startPos, float panning, float rate, int envId) 
+            : onset(onset), length(length), level(level), startPosition(startPos), panning(panning), rate(rate), envelopeId(envId)
 {
 }
 
@@ -19,9 +20,11 @@ Grain::Grain()
 {
     onset = 0; 
     length = 0;
-    envelopeId = 0;
     level = 0.0f;
     startPosition = 0.0f;
+    panning = 0.0f;
+    rate = 0.0f;
+    envelopeId = 0;
 }
 
 Grain::~Grain()
@@ -56,10 +59,13 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
     for (int channel = 0; channel < numChannels; ++channel)
     {
         int startPositionInSamples = juce::jmax(0, int(startPosition * fileNumSamples - 1));
-        int currentPosition = juce::jmax(startPositionInSamples, (startPositionInSamples + timeGrain) % fileNumSamples);
+        int currentPosition = juce::jmax(startPositionInSamples, (startPositionInSamples + int(timeGrain * rate)) % fileNumSamples);
         float sample = fileBuffer.getSample(channel % fileBufferNumChannels, currentPosition);
 
-        currentBlock.addSample(channel, time % blockNumSamples, sample * envelope(timeGrain) * level * 0.2);
+        float sampleLeft = sample * envelope(timeGrain) * level * 0.2f * abs(panning - 100.0f) / 200.0f;
+        float sampleRight = sample * envelope(timeGrain) * level * 0.2f * abs(panning + 100.0f) / 200.0f;
+
+        currentBlock.addSample(channel, time % blockNumSamples, (channel % 2 == 0) ? sampleLeft : sampleRight);
     }
 }
 
@@ -80,7 +86,7 @@ float Grain::triangularWindow(int n, int N)
 
 float Grain::rectangularWindow(int n, int N)
 {
-    double coeff = 10.0;
+    double coeff = 15.0;
     if (n < N / coeff) return coeff * n / N;
     else if (n > (coeff - 1) * N / coeff) return 1.0 - coeff * (n - (coeff - 1.0) * N / coeff) / N;
     else return 1.0;
@@ -88,7 +94,7 @@ float Grain::rectangularWindow(int n, int N)
 
 float Grain::rampUpWindow(int n, int N)
 {
-    double coeff = 20.0;
+    double coeff = 25.0;
     if (n < (coeff - 1) * N / coeff) return (exp(n * coeff / ((coeff - 1.0) * N)) - 1.0) / (exp(1.0) - 1.0);
     else return 1.0 - coeff * (n - (coeff - 1.0) * N / coeff) / N;
 }
