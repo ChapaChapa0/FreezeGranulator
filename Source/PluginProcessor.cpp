@@ -281,6 +281,7 @@ void ChapaGranulatorAudioProcessor::run()
         // Delete grains
         if (grainArray.size() > 0) {
             for (int i = grainArray.size() - 1; i >= 0; --i) {
+
                 // Check if the grain has ended
                 long long int grainEnd = grainArray[i].onset + grainArray[i].length;
                 bool hasEnded = grainEnd < time;
@@ -292,7 +293,7 @@ void ChapaGranulatorAudioProcessor::run()
         // Add grains
         if (currentBuffer != nullptr) 
         {
-            if (play && grainArray.size() < 200)
+            if (play && grainArray.size() < maxGrains)
             {
                 // Get all parameters from buttons and sliders
                 float transpose = *(parameters.getRawParameterValue("transpose"));
@@ -340,21 +341,24 @@ void ChapaGranulatorAudioProcessor::run()
 
                 float grainRate = pow(10, grainTranspose / (1200.0 * 3.322038403));
                 int grainLengthInSamples = int(grainLength / 1000.0 * sampleRate);
-                long long int onset = time + 300;
+                long long int onset = time + delayOnset;
 
                 // Add grain to the total of grains
                 Grain grain = *new Grain(onset, grainLengthInSamples, grainLevel, grainPosition, grainPanning, grainRate, grainEnvelopeId);
                 grainArray.add(grain);
 
+                // Wait according to the ponctual density computed (density = number of grains generated per second)
                 wait(int(1000 / ponctualDensity));
             }
             else
             {
+                // Wait for grains to be deleted or for a note to be played
                 wait(100);
             }
         }
         else
         {
+            // Wait for a sample to be loaded
             wait(100);
         }
     }

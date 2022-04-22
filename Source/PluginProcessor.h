@@ -67,7 +67,8 @@ public:
     long long int time;
     long long int nextGrainOnset;
 
-    int numGrains = 0;
+    int maxGrains = 200;
+    int delayOnset = 500;
     bool play = false;
 
 private:
