@@ -16,6 +16,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
       thumbnailCache(5), thumbnail(512, audioProcessor.formatManager, thumbnailCache)
 {
     setLookAndFeel(&chapaGranulatorLook);
+    //setResizable(true, true);
 
     openButton.setButtonText("Open...");
     openButton.addListener(this);
@@ -158,7 +159,27 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
     audioProcessor.updateValue();
 }
 
+
 void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
     if (source == &thumbnail) thumbnailChanged();
+}
+
+//==============================================================================
+
+void ChapaGranulatorAudioProcessorEditor::showSampleWindow()
+{
+
+}
+
+void ChapaGranulatorAudioProcessorEditor::showFXWindow()
+{
+}
+
+void ChapaGranulatorAudioProcessorEditor::closeAllWindows()
+{
+    for (auto& window : windows)
+        window.deleteAndZero();
+
+    windows.clear();
 }

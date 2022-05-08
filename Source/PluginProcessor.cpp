@@ -25,21 +25,27 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         {
         std::make_unique<juce::AudioParameterFloat>("transpose", "Transposition of Sample", juce::NormalisableRange<float>(-2400.0f, 2400.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTranspose", "Amount Random Transposition", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("inertiaTranspose", "Amount Transposition Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("density", "Density of Grains", juce::NormalisableRange<float>(1.0f, 100.0f, 0.01f, 0.4f), 10.0f),
         std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Density", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("inertiaDensity", "Amount Density Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("inertiaPosition", "Amount Position Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.3f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("inertiaLength", "Amount Length Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
         std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterFloat>("inertiaLevel", "Amount Level Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique <juce::AudioParameterFloat>("panning", "Panning of Grains", juce::NormalisableRange<float>(-100.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("randPanning", "Amount Random Panning", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
+        std::make_unique <juce::AudioParameterFloat>("inertiaPanning", "Amount Panning Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
 
         std::make_unique<juce::AudioParameterBool>("envelopeSine", "Grain Envelope Sine", true),
         std::make_unique<juce::AudioParameterBool>("envelopeTriangle", "Grain Envelope Triangle", false),
@@ -54,8 +60,11 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 #endif
 {
     time = 0;
-    nextGrainOnset = 0;
     sampleRate = 44100;
+
+    // Init all grains and inertia parameters
+    grainLength = 50.0f, grainPosition = 0.0f, grainTranspose = 0.0f, grainDensity = 10.0f, grainLevel = 0.0f, grainPanning = 0.0f;
+    timeLength = 0, timePosition = 0, timeTranspose = 0, timeDensity = 0, timeLevel = 0, timePanning = 0;
 
     formatManager.registerBasicFormats();
     startThread();
@@ -295,6 +304,9 @@ void ChapaGranulatorAudioProcessor::run()
         {
             if (play && grainArray.size() < maxGrains)
             {
+                // Get time value before adding grain
+                long long int debutTime = time;
+
                 // Get all parameters from buttons and sliders
                 float transpose = *(parameters.getRawParameterValue("transpose"));
                 float level = *(parameters.getRawParameterValue("level"));
@@ -310,6 +322,13 @@ void ChapaGranulatorAudioProcessor::run()
                 float randDensity = *(parameters.getRawParameterValue("randDensity"));
                 float randPanning = *(parameters.getRawParameterValue("randPanning"));
 
+                float inertiaTranspose = *(parameters.getRawParameterValue("inertiaTranspose"));
+                float inertiaLevel = *(parameters.getRawParameterValue("inertiaLevel"));
+                float inertiaPosition = *(parameters.getRawParameterValue("inertiaPosition"));
+                float inertiaLength = *(parameters.getRawParameterValue("inertiaLength"));
+                float inertiaDensity = *(parameters.getRawParameterValue("inertiaDensity"));
+                float inertiaPanning = *(parameters.getRawParameterValue("inertiaPanning"));
+
                 int envelopeId = 0;
                 for (int i = 1; i < 6; ++i)
                 {
@@ -318,22 +337,46 @@ void ChapaGranulatorAudioProcessor::run()
                 }
 
                 // Compute real parameters values for this particular grain
-                float grainTranspose = transpose + (2.0f * (0.5f - random.nextFloat()) * randTranspose / 100.0f) * 2400.0f;
+                if (time > timeTranspose)
+                {
+                    grainTranspose = transpose + (2.0f * (0.5f - random.nextFloat()) * randTranspose / 100.0f) * 2400.0f;
+                    timeTranspose = time + int(inertiaTranspose * sampleRate / 1000);
+                }
                 grainTranspose = juce::jmin(2400.0f, juce::jmax(-2400.0f, grainTranspose));
 
-                float grainLevel = level / 100.0f + (2.0f * (0.5f - random.nextFloat()) * randLevel / 100.0f);
+                if (time > timeLevel)
+                {
+                    grainLevel = level / 100.0f + (2.0f * (0.5f - random.nextFloat()) * randLevel / 100.0f);
+                    timeLevel = time + int(inertiaLevel * sampleRate / 1000);
+                }
                 grainLevel = juce::jmin(1.0f, juce::jmax(0.0f, grainLevel));
 
-                float grainPosition = position + (2.0f * (0.5f - random.nextFloat()) * randPosition / 100.0f);
+                if (time > timePosition)
+                {
+                    grainPosition = position + (2.0f * (0.5f - random.nextFloat()) * randPosition / 100.0f);
+                    timePosition = time + int(inertiaPosition * sampleRate / 1000);
+                }
                 grainPosition = juce::jmin(1.0f, juce::jmax(0.0f, grainPosition));
 
-                float grainLength = length + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randLength / 100.0, 1.0 / 0.3)) * 10000.0f;
+                if (time > timeLength)
+                {
+                    grainLength = length + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randLength / 100.0, 1.0 / 0.3)) * 10000.0f;
+                    timeLength = time + int(inertiaLength * sampleRate / 1000);
+                }
                 grainLength = juce::jmin(10000.0f, juce::jmax(1.0f, grainLength));
 
-                float ponctualDensity = density + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randDensity / 100.0, 1.0 / 0.4)) * 100.0f;
-                ponctualDensity = juce::jmin(100.0f, juce::jmax(1.0f, ponctualDensity));
+                if (time > timeDensity)
+                {
+                    grainDensity = density + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randDensity / 100.0, 1.0 / 0.4)) * 100.0f;
+                    timeDensity = time + int(inertiaDensity * sampleRate / 1000);
+                }
+                grainDensity = juce::jmin(100.0f, juce::jmax(1.0f, grainDensity));
 
-                float grainPanning = panning + (2.0f * (0.5f - random.nextFloat()) * randPanning);
+                if (time > timePanning)
+                {
+                    grainPanning = panning + (2.0f * (0.5f - random.nextFloat()) * randPanning);
+                    timePanning = time + int(inertiaPanning * sampleRate / 1000);
+                }
                 grainPanning = juce::jmin(100.0f, juce::jmax(-100.0f, grainPanning));
 
                 int grainEnvelopeId = envelopeId;
@@ -348,7 +391,8 @@ void ChapaGranulatorAudioProcessor::run()
                 grainArray.add(grain);
 
                 // Wait according to the ponctual density computed (density = number of grains generated per second)
-                wait(int(1000 / ponctualDensity));
+                int timeToWait = juce::jmax(0, int(1000 / grainDensity - (time - debutTime) / sampleRate * 1000));
+                wait(timeToWait);
             }
             else
             {

@@ -65,11 +65,13 @@ public:
 
     double sampleRate;
     long long int time;
-    long long int nextGrainOnset;
 
     int maxGrains = 200;
     int delayOnset = 500;
     bool play = false;
+
+    float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
+    long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;
 
 private:
     juce::Random random;
