@@ -20,7 +20,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
 
     openButton.setButtonText("Open...");
     openButton.addListener(this);
-    openButton.setBounds(10, 300, 780, 20);
+    openButton.setBounds(10, 500, 780, 20);
     addAndMakeVisible(&openButton);
 
     thumbnail.addChangeListener(this);
@@ -28,9 +28,11 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     // Set parameters bounds, id and name
     auto buttonsId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
 
-    auto slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "randTranspose", "randDensity", "randPosition", "randLength", "randPanning", "randLevel");
-    auto slidersText = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "r transpose", "r density", "r position", "r length", "r panning", "r level");
-    auto slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%");
+    auto slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "randTranspose", "randDensity", "randPosition", "randLength",
+                                       "randPanning", "randLevel", "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
+    auto slidersText = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "r transpose", "r density", "r position", "r length", 
+                                         "r panning", "r level", "i transpose", "i density", "i position", "i length", "i panning", "i level");
+    auto slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%", " ms", " ms", " ms", " ms", " ms", " ms");
 
     // Set the envelope buttons
     for (int i = 0; i < buttonsId.size(); ++i)
@@ -61,10 +63,10 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     playButton.setButtonText("Play");
     playButton.setToggleState(false, juce::dontSendNotification);
     playButton.addListener(this);
-    playButton.setBounds(10, 200, 100, 20);
+    playButton.setBounds(10, 400, 100, 20);
     addAndMakeVisible(&playButton);
     
-    setSize (800, 600);
+    setSize (800, 800);
 }
 
 ChapaGranulatorAudioProcessorEditor::~ChapaGranulatorAudioProcessorEditor()
@@ -80,7 +82,7 @@ void ChapaGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
 
-    juce::Rectangle<int> thumbnailBounds(10, 330, getWidth() - 20, 250);
+    juce::Rectangle<int> thumbnailBounds(10, 530, getWidth() - 20, 250);
 
     if (thumbnail.getNumChannels() == 0)
         paintIfNoFileLoaded(g, thumbnailBounds);
@@ -166,20 +168,3 @@ void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBro
 }
 
 //==============================================================================
-
-void ChapaGranulatorAudioProcessorEditor::showSampleWindow()
-{
-
-}
-
-void ChapaGranulatorAudioProcessorEditor::showFXWindow()
-{
-}
-
-void ChapaGranulatorAudioProcessorEditor::closeAllWindows()
-{
-    for (auto& window : windows)
-        window.deleteAndZero();
-
-    windows.clear();
-}

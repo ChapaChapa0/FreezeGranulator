@@ -340,44 +340,44 @@ void ChapaGranulatorAudioProcessor::run()
                 if (time > timeTranspose)
                 {
                     grainTranspose = transpose + (2.0f * (0.5f - random.nextFloat()) * randTranspose / 100.0f) * 2400.0f;
+                    grainTranspose = juce::jmin(2400.0f, juce::jmax(-2400.0f, grainTranspose));
                     timeTranspose = time + int(inertiaTranspose * sampleRate / 1000);
                 }
-                grainTranspose = juce::jmin(2400.0f, juce::jmax(-2400.0f, grainTranspose));
 
                 if (time > timeLevel)
                 {
                     grainLevel = level / 100.0f + (2.0f * (0.5f - random.nextFloat()) * randLevel / 100.0f);
+                    grainLevel = juce::jmin(1.0f, juce::jmax(0.0f, grainLevel));
                     timeLevel = time + int(inertiaLevel * sampleRate / 1000);
                 }
-                grainLevel = juce::jmin(1.0f, juce::jmax(0.0f, grainLevel));
 
                 if (time > timePosition)
                 {
                     grainPosition = position + (2.0f * (0.5f - random.nextFloat()) * randPosition / 100.0f);
+                    grainPosition = juce::jmin(1.0f, juce::jmax(0.0f, grainPosition));
                     timePosition = time + int(inertiaPosition * sampleRate / 1000);
                 }
-                grainPosition = juce::jmin(1.0f, juce::jmax(0.0f, grainPosition));
 
                 if (time > timeLength)
                 {
                     grainLength = length + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randLength / 100.0, 1.0 / 0.3)) * 10000.0f;
+                    grainLength = juce::jmin(10000.0f, juce::jmax(1.0f, grainLength));
                     timeLength = time + int(inertiaLength * sampleRate / 1000);
                 }
-                grainLength = juce::jmin(10000.0f, juce::jmax(1.0f, grainLength));
 
                 if (time > timeDensity)
                 {
                     grainDensity = density + (2.0f * (0.5f - random.nextFloat()) * (float)pow(randDensity / 100.0, 1.0 / 0.4)) * 100.0f;
+                    grainDensity = juce::jmin(100.0f, juce::jmax(1.0f, grainDensity));
                     timeDensity = time + int(inertiaDensity * sampleRate / 1000);
                 }
-                grainDensity = juce::jmin(100.0f, juce::jmax(1.0f, grainDensity));
 
                 if (time > timePanning)
                 {
                     grainPanning = panning + (2.0f * (0.5f - random.nextFloat()) * randPanning);
+                    grainPanning = juce::jmin(100.0f, juce::jmax(-100.0f, grainPanning));
                     timePanning = time + int(inertiaPanning * sampleRate / 1000);
                 }
-                grainPanning = juce::jmin(100.0f, juce::jmax(-100.0f, grainPanning));
 
                 int grainEnvelopeId = envelopeId;
                 if (envelopeId == 5) grainEnvelopeId = random.nextInt(5);

@@ -38,23 +38,17 @@ private:
     void thumbnailChanged();
     void openButtonClicked();
 
-    void showSampleWindow();
-    void showFXWindow();
-    void closeAllWindows();
-
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     ChapaGranulatorAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& valueTreeState;
     juce::MidiKeyboardComponent keyboardComponent;
 
-    juce::Array<Component::SafePointer<Component>> windows;
-
     EnvelopeButton envelopeButtons[6];
-    juce::Slider parameterSliders[12];
-    juce::Label parameterLabels[12];
+    juce::Slider parameterSliders[18];
+    juce::Label parameterLabels[18];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[12];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[18];
 
     juce::TextButton openButton;
     std::unique_ptr<juce::FileChooser> chooser;
