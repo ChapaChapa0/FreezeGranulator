@@ -26,26 +26,44 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("transpose", "Transposition of Sample", juce::NormalisableRange<float>(-2400.0f, 2400.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTranspose", "Amount Random Transposition", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaTranspose", "Amount Transposition Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaTransposeOff", "Inertia Transpose Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaTransposeNote", "Inertia Transpose Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaTransposeHz", "Inertia Transpose Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("density", "Density of Grains", juce::NormalisableRange<float>(1.0f, 100.0f, 0.01f, 0.4f), 10.0f),
         std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Density", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaDensity", "Amount Density Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaDensityOff", "Inertia Density Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaDensityNote", "Inertia Density Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaDensityHz", "Inertia Density Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaPosition", "Amount Position Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaPositionOff", "Inertia Position Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaPositionNote", "Inertia Position Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaPositionHz", "Inertia Position Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.3f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaLength", "Amount Length Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaLengthOff", "Inertia Length Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaLengthNote", "Inertia Length Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaLengthHz", "Inertia Length Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
         std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaLevel", "Amount Level Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaLevelOff", "Inertia Level Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaLevelNote", "Inertia Level Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaLevelHz", "Inertia Level Frequency Mode", false),
 
         std::make_unique <juce::AudioParameterFloat>("panning", "Panning of Grains", juce::NormalisableRange<float>(-100.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("randPanning", "Amount Random Panning", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("inertiaPanning", "Amount Panning Inertia", juce::NormalisableRange<float>(0.0f, 1000.0f, 0.1f), 0.0f),
+        std::make_unique<juce::AudioParameterBool>("inertiaPanningOff", "Inertia Panning Off", true),
+        std::make_unique<juce::AudioParameterBool>("inertiaPanningNote", "Inertia Panning Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("inertiaPanningHz", "Inertia Panning Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterBool>("envelopeSine", "Grain Envelope Sine", true),
         std::make_unique<juce::AudioParameterBool>("envelopeTriangle", "Grain Envelope Triangle", false),
@@ -335,12 +353,16 @@ void ChapaGranulatorAudioProcessor::run()
                 float inertiaDensity = *(parameters.getRawParameterValue("inertiaDensity"));
                 float inertiaPanning = *(parameters.getRawParameterValue("inertiaPanning"));
 
-                int envelopeId = 0;
-                for (int i = 1; i < 6; ++i)
+                // Get grain envelope
+                int grainEnvelopeId = -1;
+                int i = 0;
+                do
                 {
-                    float envelope_i = *(parameters.getRawParameterValue(buttonsId[i]));
-                    if (envelope_i > 0.5f) envelopeId = i;
-                }
+                    float envelope_i = *(parameters.getRawParameterValue(envelopeId[i]));
+                    if (envelope_i > 0.5f) grainEnvelopeId = i;
+                    ++i;
+                } while (i < envelopeId.size() && grainEnvelopeId < 0);
+                if (grainEnvelopeId == 5) grainEnvelopeId = random.nextInt(5);
 
                 // Compute real parameters values for this particular grain
                 if (inertiaTranspose < 0.01 || time > timeTranspose)
@@ -384,9 +406,6 @@ void ChapaGranulatorAudioProcessor::run()
                     grainPanning = juce::jmin(100.0f, juce::jmax(-100.0f, grainPanning));
                     timePanning = time + int(inertiaPanning * sampleRate / 1000);
                 }
-
-                int grainEnvelopeId = envelopeId;
-                if (envelopeId == 5) grainEnvelopeId = random.nextInt(5);
 
                 float grainRate = pow(10, grainTranspose / (1200.0 * 3.322038403));
                 int grainLengthInSamples = int(grainLength / 1000.0 * sampleRate);

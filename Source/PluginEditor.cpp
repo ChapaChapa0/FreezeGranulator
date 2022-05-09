@@ -21,19 +21,15 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     thumbnail.addChangeListener(this);
 
     // Set parameters bounds, id and name
-    auto envelopeId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
-    auto inertiaId = juce::StringArray("inertiaOff", "inertiaNote", "inertiaHz");
-
-    auto slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "randTranspose", "randDensity", "randPosition", "randLength",
-                                       "randPanning", "randLevel", "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
-    auto slidersText = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "r transpose", "r density", "r position", "r length", 
-                                         "r panning", "r level", "i transpose", "i density", "i position", "i length", "i panning", "i level");
-    auto slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%", " ms", " ms", " ms", " ms", " ms", " ms");
+    juce::StringArray slidersText = juce::StringArray("transpose", "density", "position", "length", "panning", "level",
+                                                      "r transpose", "r density", "r position", "r length", "r panning", "r level",
+                                                      "i transpose", "i density", "i position", "i length", "i panning", "i level");
+    juce::StringArray slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%", " ms", " ms", " ms", " ms", " ms", " ms");
 
     // Set envelope buttons
-    for (int i = 0; i < envelopeId.size(); ++i)
+    for (int i = 0; i < audioProcessor.envelopeId.size(); ++i)
     {
-        envelopeButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, envelopeId[i], envelopeButtons[i]));
+        envelopeButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, audioProcessor.envelopeId[i], envelopeButtons[i]));
         envelopeButtons[i].setButton(i);
         envelopeButtons[i].setClickingTogglesState(true);
         envelopeButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
@@ -43,9 +39,9 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     }
 
     // Set parameters sliders
-    for (int i = 0; i < slidersId.size(); ++i)
+    for (int i = 0; i < audioProcessor.slidersId.size(); ++i)
     {
-        sliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, slidersId[i], parameterSliders[i]));
+        sliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, audioProcessor.slidersId[i], parameterSliders[i]));
         parameterSliders[i].setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         parameterLabels[i].setText(slidersText[i], juce::NotificationType::dontSendNotification);
         parameterLabels[i].attachToComponent(&(parameterSliders[i]), false);
@@ -58,21 +54,21 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     }
 
     // Set inertia buttons
-    for (int i = 0; i < inertiaId.size(); ++i)
+    for (int i = 0; i < audioProcessor.inertiaId.size(); ++i)
     {
-        inertiaButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, envelopeId[i], inertiaButtons[i]));
+        inertiaButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, audioProcessor.inertiaId[i], inertiaButtons[i]));
         inertiaButtons[i].setButton(i % 3);
         inertiaButtons[i].setClickingTogglesState(true);
-        inertiaButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
+        inertiaButtons[i].setRadioGroupId(int(i / 3) + 1, juce::NotificationType::sendNotification);
         inertiaButtons[i].addListener(this);
-        inertiaButtons[i].setBounds(200 + i * 30, 500, 40, 40);
-        //addAndMakeVisible(&inertiaButtons[i]);
+        inertiaButtons[i].setBounds(200 + i * 30 + int(i / 3) * 10, 480, 30, 30);
+        addAndMakeVisible(&inertiaButtons[i]);
     }
 
     // Set open file button
     openButton.setButtonText("Open...");
     openButton.addListener(this);
-    openButton.setBounds(10, 500, 780, 20);
+    openButton.setBounds(10, 520, 780, 20);
     addAndMakeVisible(&openButton);
 
     // Set play button

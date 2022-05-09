@@ -77,6 +77,17 @@ public:
     float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
     long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;
 
+    juce::StringArray envelopeId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
+    juce::StringArray inertiaId = juce::StringArray("inertiaTransposeOff", "inertiaTransposeNote", "inertiaTransposeHz",
+                                                    "inertiaDensityOff", "inertiaDensityNote", "inertiaDensityHz",
+                                                    "inertiaPositionOff", "inertiaPositionNote", "inertiaPositionHz",
+                                                    "inertiaLengthOff", "inertiaLengthNote", "inertiaLengthHz",
+                                                    "inertiaPanningOff", "inertiaPanningNote", "inertiaPanningHz",
+                                                    "inertiaLevelOff", "inertiaLevelNote", "inertiaLevelHz");
+    juce::StringArray slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", 
+                                                    "randTranspose", "randDensity", "randPosition", "randLength", "randPanning", "randLevel", 
+                                                    "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
+
 private:
     juce::Random random;
 
@@ -90,7 +101,6 @@ private:
     juce::ReferenceCountedArray<ReferenceCountedBuffer> buffers;
     ReferenceCountedBuffer::Ptr currentBuffer;
 
-    juce::StringArray buttonsId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
     juce::AudioProcessorValueTreeState parameters;    
 
     //==============================================================================
