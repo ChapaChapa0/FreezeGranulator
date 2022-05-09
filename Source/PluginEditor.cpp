@@ -18,15 +18,11 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     setLookAndFeel(&chapaGranulatorLook);
     //setResizable(true, true);
 
-    openButton.setButtonText("Open...");
-    openButton.addListener(this);
-    openButton.setBounds(10, 500, 780, 20);
-    addAndMakeVisible(&openButton);
-
     thumbnail.addChangeListener(this);
 
     // Set parameters bounds, id and name
-    auto buttonsId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
+    auto envelopeId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
+    auto inertiaId = juce::StringArray("inertiaOff", "inertiaNote", "inertiaHz");
 
     auto slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", "randTranspose", "randDensity", "randPosition", "randLength",
                                        "randPanning", "randLevel", "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
@@ -34,11 +30,11 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
                                          "r panning", "r level", "i transpose", "i density", "i position", "i length", "i panning", "i level");
     auto slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%", " ms", " ms", " ms", " ms", " ms", " ms");
 
-    // Set the envelope buttons
-    for (int i = 0; i < buttonsId.size(); ++i)
+    // Set envelope buttons
+    for (int i = 0; i < envelopeId.size(); ++i)
     {
-        envelopeButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, buttonsId[i], envelopeButtons[i]));
-        envelopeButtons[i].setEnvelope(i);
+        envelopeButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, envelopeId[i], envelopeButtons[i]));
+        envelopeButtons[i].setButton(i);
         envelopeButtons[i].setClickingTogglesState(true);
         envelopeButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
         envelopeButtons[i].addListener(this);
@@ -46,6 +42,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         addAndMakeVisible(&envelopeButtons[i]);
     }
 
+    // Set parameters sliders
     for (int i = 0; i < slidersId.size(); ++i)
     {
         sliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, slidersId[i], parameterSliders[i]));
@@ -60,12 +57,32 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         addAndMakeVisible(&parameterSliders[i]);
     }
 
+    // Set inertia buttons
+    for (int i = 0; i < inertiaId.size(); ++i)
+    {
+        inertiaButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, envelopeId[i], inertiaButtons[i]));
+        inertiaButtons[i].setButton(i % 3);
+        inertiaButtons[i].setClickingTogglesState(true);
+        inertiaButtons[i].setRadioGroupId(1, juce::NotificationType::sendNotification);
+        inertiaButtons[i].addListener(this);
+        inertiaButtons[i].setBounds(200 + i * 30, 500, 40, 40);
+        //addAndMakeVisible(&inertiaButtons[i]);
+    }
+
+    // Set open file button
+    openButton.setButtonText("Open...");
+    openButton.addListener(this);
+    openButton.setBounds(10, 500, 780, 20);
+    addAndMakeVisible(&openButton);
+
+    // Set play button
     playButton.setButtonText("Play");
     playButton.setToggleState(false, juce::dontSendNotification);
     playButton.addListener(this);
     playButton.setBounds(10, 400, 100, 20);
     addAndMakeVisible(&playButton);
     
+    // Set GUI size
     setSize (800, 800);
 }
 

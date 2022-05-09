@@ -30,6 +30,18 @@
               file="Images/env_triangle_off.png"/>
         <FILE id="dyWuXv" name="env_triangle_on.png" compile="0" resource="1"
               file="Images/env_triangle_on.png"/>
+        <FILE id="vcNTIt" name="inertia_hz_off.png" compile="0" resource="1"
+              file="Images/inertia_hz_off.png"/>
+        <FILE id="l1MWaU" name="inertia_hz_on.png" compile="0" resource="1"
+              file="Images/inertia_hz_on.png"/>
+        <FILE id="WyG1HO" name="inertia_note_off.png" compile="0" resource="1"
+              file="Images/inertia_note_off.png"/>
+        <FILE id="j2K23B" name="inertia_note_on.png" compile="0" resource="1"
+              file="Images/inertia_note_on.png"/>
+        <FILE id="bax42R" name="inertia_off_off.png" compile="0" resource="1"
+              file="Images/inertia_off_off.png"/>
+        <FILE id="qEv0iV" name="inertia_off_on.png" compile="0" resource="1"
+              file="Images/inertia_off_on.png"/>
       </GROUP>
       <GROUP id="{6AF81939-01C3-D1D3-5580-D750750362CB}" name="GUI">
         <FILE id="OsRujU" name="ParametersObjects.h" compile="0" resource="0"

@@ -16,10 +16,10 @@ class EnvelopeButton : public juce::ImageButton
 public:
     EnvelopeButton() {}
 
-    void setEnvelope(int indexEnvelope)
+    void setButton(int index)
     {
-        setImages(true, true, true, imageOff[indexEnvelope], 1.0f, juce::Colours::transparentWhite, juce::Image(), 1.0f,
-            juce::Colours::transparentWhite, imageOn[indexEnvelope], 1.0f, juce::Colours::transparentWhite, 0.0f);
+        setImages(true, true, true, imageOff[index], 1.0f, juce::Colours::transparentWhite, juce::Image(), 1.0f,
+            juce::Colours::transparentWhite, imageOn[index], 1.0f, juce::Colours::transparentWhite, 0.0f);
     }
 
     juce::Image imageOn[6] =
@@ -40,6 +40,37 @@ public:
         juce::ImageCache::getFromMemory(BinaryData::env_rampup_off_png, BinaryData::env_rampup_off_pngSize),
         juce::ImageCache::getFromMemory(BinaryData::env_rampdown_off_png, BinaryData::env_rampdown_off_pngSize),
         juce::ImageCache::getFromMemory(BinaryData::env_random_off_png, BinaryData::env_random_off_pngSize)
+    };
+
+private:
+    int indexEnvelope = 0;
+};
+
+
+
+class InertiaButton : public juce::ImageButton
+{
+public:
+    InertiaButton() {}
+
+    void setButton(int index)
+    {
+        setImages(true, true, true, imageOff[index], 1.0f, juce::Colours::transparentWhite, juce::Image(), 1.0f,
+            juce::Colours::transparentWhite, imageOn[index], 1.0f, juce::Colours::transparentWhite, 0.0f);
+    }
+
+    juce::Image imageOn[3] =
+    {
+        juce::ImageCache::getFromMemory(BinaryData::inertia_off_on_png, BinaryData::inertia_off_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::inertia_note_on_png, BinaryData::inertia_note_on_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::inertia_hz_on_png, BinaryData::inertia_hz_on_pngSize)
+    };
+
+    juce::Image imageOff[3] =
+    {
+        juce::ImageCache::getFromMemory(BinaryData::inertia_off_off_png, BinaryData::inertia_off_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::inertia_note_off_png, BinaryData::inertia_note_off_pngSize),
+        juce::ImageCache::getFromMemory(BinaryData::inertia_hz_off_png, BinaryData::inertia_hz_off_pngSize)
     };
 
 private:

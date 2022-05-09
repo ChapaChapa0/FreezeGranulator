@@ -63,6 +63,10 @@ public:
     juce::String filePath;
     juce::AudioFormatManager formatManager;
 
+    // CurrentPositionInfo object used to get BPM from host
+    juce::AudioPlayHead::CurrentPositionInfo currentPositionInfo;
+    float myBPM = -1.0f;
+
     double sampleRate;
     long long int time;
 
