@@ -61,7 +61,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         inertiaButtons[i].setClickingTogglesState(true);
         inertiaButtons[i].setRadioGroupId(int(i / 3) + 1, juce::NotificationType::sendNotification);
         inertiaButtons[i].addListener(this);
-        inertiaButtons[i].setBounds(200 + i * 30 + int(i / 3) * 10, 480, 30, 30);
+        inertiaButtons[i].setBounds(200 + i * 30 + int(i / 3) * 10, 460, 30, 30);
         addAndMakeVisible(&inertiaButtons[i]);
     }
 

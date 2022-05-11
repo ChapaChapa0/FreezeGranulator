@@ -201,10 +201,13 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     // Update BPM value
-    //auto playHead = getPlayHead();
-    //playHead->getCurrentPosition(currentPositionInfo);
-    //if (currentPositionInfo.bpm != myBPM)
-    //    myBPM = currentPositionInfo.bpm;
+    auto playHead = getPlayHead();
+    if (playHead != nullptr)
+    {
+        playHead->getCurrentPosition(currentPositionInfo);
+        if (currentPositionInfo.bpm != myBPM)
+            myBPM = currentPositionInfo.bpm;
+    }
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());

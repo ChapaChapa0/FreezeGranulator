@@ -45,22 +45,22 @@ namespace BinaryData
     const int            env_triangle_on_pngSize = 3288;
 
     extern const char*   inertia_hz_off_png;
-    const int            inertia_hz_off_pngSize = 2788;
+    const int            inertia_hz_off_pngSize = 2778;
 
     extern const char*   inertia_hz_on_png;
-    const int            inertia_hz_on_pngSize = 2731;
+    const int            inertia_hz_on_pngSize = 2701;
 
     extern const char*   inertia_note_off_png;
-    const int            inertia_note_off_pngSize = 13314;
+    const int            inertia_note_off_pngSize = 13315;
 
     extern const char*   inertia_note_on_png;
-    const int            inertia_note_on_pngSize = 13170;
+    const int            inertia_note_on_pngSize = 13230;
 
     extern const char*   inertia_off_off_png;
-    const int            inertia_off_off_pngSize = 3253;
+    const int            inertia_off_off_pngSize = 3116;
 
     extern const char*   inertia_off_on_png;
-    const int            inertia_off_on_pngSize = 3118;
+    const int            inertia_off_on_pngSize = 3070;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
     const int namedResourceListSize = 18;
