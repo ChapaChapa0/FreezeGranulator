@@ -33,9 +33,6 @@ public:
     virtual void buttonStateChanged(juce::Button* button) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
-    void dragOperationStarted(const juce::DragAndDropTarget::SourceDetails&) override;
-    void dragOperationEnded(const juce::DragAndDropTarget::SourceDetails&) override;
-
     PluginLook chapaGranulatorLook;
 
 private:
@@ -54,18 +51,21 @@ private:
     EnvelopeButton envelopeButtons[6];
     InertiaButton inertiaButtons[18];
     DirectionButton directionButtons[3];
+    juce::Slider maxGrainsSlider;
     juce::Slider parameterSliders[18];
     juce::TextButton openButton;
 
     // Labels associated to buttons and sliders
     juce::Label envelopeLabel;
     juce::Label directionLabel;
+    juce::Label maxGrainsLabel;
     juce::Label parameterLabels[18];
 
     // Attachments to buttons and sliders
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> inertiaButtonAttachments[18];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> directionButtonAttachments[3];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> maxGrainsAttachments;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[18];
     std::unique_ptr<juce::FileChooser> chooser;
 

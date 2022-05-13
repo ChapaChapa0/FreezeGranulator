@@ -114,10 +114,8 @@ class ThumbnailFileDragAndDropTarget : public juce::Component, public juce::File
 {
 
 public:
-    ThumbnailFileDragAndDropTarget() 
-    {
-        dropedFilePath = juce::String();
-    }
+    ThumbnailFileDragAndDropTarget(ChapaGranulatorAudioProcessor& p, juce::AudioThumbnail& thumbnail) 
+        : audioProcessor(p), audioThumbnail(thumbnail) {}
 
     void paint(juce::Graphics& g) override
     {
@@ -146,9 +144,17 @@ public:
     void filesDropped(const juce::StringArray& files, int /*x*/, int /*y*/) override
     {
         auto path = files.begin();
-        dropedFilePath = *path;
+        auto file = juce::File(*path);
+
+        if (file != juce::File{})
+        {
+            audioProcessor.filePath = *path;
+            audioThumbnail.setSource(new juce::FileInputSource(file));
+            audioProcessor.updateFile();
+        }
         repaint();
     }
 
-    juce::String dropedFilePath;
+    juce::AudioThumbnail& audioThumbnail;
+    ChapaGranulatorAudioProcessor& audioProcessor;
 };

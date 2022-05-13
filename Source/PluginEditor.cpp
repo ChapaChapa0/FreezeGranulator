@@ -13,7 +13,8 @@
 ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaGranulatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts), 
       keyboardComponent(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
-      thumbnailCache(5), thumbnail(512, audioProcessor.formatManager, thumbnailCache)
+      thumbnailCache(5), thumbnail(512, audioProcessor.formatManager, thumbnailCache),
+      thumbnailTarget(p, thumbnail)
 {
     setLookAndFeel(&chapaGranulatorLook);
     //setResizable(true, true);
@@ -38,7 +39,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         parameterSliders[i].setTextValueSuffix(slidersSuffix[i]);
         parameterSliders[i].setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
         parameterSliders[i].addListener(this);
-        parameterSliders[i].setBounds(340 + (i % 6) * 109, 40 + int(i / 6) * 140, 100, 100);
+        parameterSliders[i].setBounds(300 + (i % 6) * 109, 40 + int(i / 6) * 140, 100, 100);
         addAndMakeVisible(&parameterSliders[i]);
     }
 
@@ -50,9 +51,11 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         envelopeButtons[i].setClickingTogglesState(true);
         envelopeButtons[i].setRadioGroupId(100, juce::NotificationType::sendNotification);
         envelopeButtons[i].addListener(this);
-        envelopeButtons[i].setBounds(20 + (i % 3) * 70, 40 + int(i / 3) * 70, 60, 60);
+        envelopeButtons[i].setBounds(20 + (i % 3) * 70, 180 + int(i / 3) * 70, 60, 60);
         addAndMakeVisible(&envelopeButtons[i]);
     }
+    envelopeLabel.setText("Envelope", juce::NotificationType::dontSendNotification);
+    envelopeLabel.attachToComponent(&(envelopeButtons[0]), false);
 
     // Set inertia buttons
     for (int i = 0; i < audioProcessor.inertiasId.size(); ++i)
@@ -62,7 +65,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         inertiaButtons[i].setClickingTogglesState(true);
         inertiaButtons[i].setRadioGroupId(200 + int(i / 3), juce::NotificationType::sendNotification);
         inertiaButtons[i].addListener(this);
-        inertiaButtons[i].setBounds(340 + i * 33 +int(i / 3) * 10, 425, 30, 30);
+        inertiaButtons[i].setBounds(300 + i * 33 +int(i / 3) * 10, 425, 30, 30);
         addAndMakeVisible(&inertiaButtons[i]);
     }
 
@@ -74,9 +77,24 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         directionButtons[i].setClickingTogglesState(true);
         directionButtons[i].setRadioGroupId(300, juce::NotificationType::sendNotification);
         directionButtons[i].addListener(this);
-        directionButtons[i].setBounds(20 + i * 70, 300, 60, 60);
+        directionButtons[i].setBounds(20 + i * 70, 370, 60, 60);
         addAndMakeVisible(&directionButtons[i]);
     }
+    directionLabel.setText("Direction", juce::NotificationType::dontSendNotification);
+    directionLabel.attachToComponent(&(directionButtons[0]), false);
+
+    // Set max grains slider
+    maxGrainsAttachments.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, "maxGrains", maxGrainsSlider));
+    maxGrainsSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    maxGrainsLabel.setText("Max Grains", juce::NotificationType::dontSendNotification);
+    maxGrainsLabel.attachToComponent(&(maxGrainsSlider), false);
+    maxGrainsSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 75, 30);
+    maxGrainsSlider.setTextBoxIsEditable(true);
+    maxGrainsSlider.setTextValueSuffix("x");
+    maxGrainsSlider.setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
+    maxGrainsSlider.addListener(this);
+    maxGrainsSlider.setBounds(20, 40, 200, 100);
+    addAndMakeVisible(&maxGrainsSlider);
 
     // Set open file button
     openButton.setButtonText("Open...");
@@ -177,8 +195,6 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
         });
 
     audioProcessor.updateValue();
-
-    LOG("Hello ??");
 }
 
 
@@ -188,22 +204,3 @@ void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBro
 }
 
 //==============================================================================
-
-void ChapaGranulatorAudioProcessorEditor::dragOperationStarted(const juce::DragAndDropTarget::SourceDetails&)
-{
-}
-
-void ChapaGranulatorAudioProcessorEditor::dragOperationEnded(const juce::DragAndDropTarget::SourceDetails&)
-{
-    auto path = thumbnailTarget.dropedFilePath;
-    auto file = juce::File(path);
-
-    LOG("Hello");
-
-    if (file != juce::File{})
-    {
-        audioProcessor.filePath = path;
-        thumbnail.setSource(new juce::FileInputSource(file));
-        audioProcessor.updateFile();
-    }
-}

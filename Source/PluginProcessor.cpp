@@ -23,6 +23,8 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
     ),
     parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
         {
+        std::make_unique<juce::AudioParameterInt>("maxGrains", "Number Max of Grains", 10, 1000, 100),
+
         std::make_unique<juce::AudioParameterFloat>("transpose", "Transposition of Sample", juce::NormalisableRange<float>(-2400.0f, 2400.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTranspose", "Amount Random Transposition", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("inertiaTranspose", "Amount Transposition Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
@@ -349,6 +351,7 @@ void ChapaGranulatorAudioProcessor::run()
         }
 
         // Add grains
+        int maxGrains = (int) *(parameters.getRawParameterValue("maxGrains"));
         if (currentBuffer != nullptr && activeNotes.size() > 0 && grainArray.size() < maxGrains)
         {
             // Get time value before adding grain
