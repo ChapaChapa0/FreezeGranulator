@@ -17,10 +17,10 @@ public:
     PluginLook()
     {
         setColour(juce::Slider::thumbColourId, blazeorange);
-        setColour(juce::Label::textColourId, juce::Colours::black);
+        setColour(juce::Label::textColourId, blazeorange);
 
-        setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
-        setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::black);
+        setColour(juce::Slider::textBoxTextColourId, coolblue);
+        setColour(juce::Slider::textBoxOutlineColourId, coolblue);
     }
 
     juce::Colour coolblue = juce::Colour(108, 142, 191); //coolblue : #6C8EBF

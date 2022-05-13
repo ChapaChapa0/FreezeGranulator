@@ -7,6 +7,18 @@
       <FILE id="yFp3Ik" name="ReferenceCountedBuffer.h" compile="0" resource="0"
             file="Source/ReferenceCountedBuffer.h"/>
       <GROUP id="{C893A482-95D6-93E7-1FE6-21F43A33F184}" name="ImagesData">
+        <FILE id="Sk9n6Q" name="direction_backward_off.png" compile="0" resource="1"
+              file="Images/direction_backward_off.png"/>
+        <FILE id="q9j2CE" name="direction_backward_on.png" compile="0" resource="1"
+              file="Images/direction_backward_on.png"/>
+        <FILE id="qnKVJ9" name="direction_forward_off.png" compile="0" resource="1"
+              file="Images/direction_forward_off.png"/>
+        <FILE id="xeVHbj" name="direction_forward_on.png" compile="0" resource="1"
+              file="Images/direction_forward_on.png"/>
+        <FILE id="FfAdo1" name="direction_random_off.png" compile="0" resource="1"
+              file="Images/direction_random_off.png"/>
+        <FILE id="fanmHD" name="direction_random_on.png" compile="0" resource="1"
+              file="Images/direction_random_on.png"/>
         <FILE id="GDTQr9" name="env_rampdown_off.png" compile="0" resource="1"
               file="Images/env_rampdown_off.png"/>
         <FILE id="ANtGhy" name="env_rampdown_on.png" compile="0" resource="1"

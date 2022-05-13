@@ -8,6 +8,24 @@
 
 namespace BinaryData
 {
+    extern const char*   direction_backward_off_png;
+    const int            direction_backward_off_pngSize = 3466;
+
+    extern const char*   direction_backward_on_png;
+    const int            direction_backward_on_pngSize = 3306;
+
+    extern const char*   direction_forward_off_png;
+    const int            direction_forward_off_pngSize = 3433;
+
+    extern const char*   direction_forward_on_png;
+    const int            direction_forward_on_pngSize = 3259;
+
+    extern const char*   direction_random_off_png;
+    const int            direction_random_off_pngSize = 3825;
+
+    extern const char*   direction_random_on_png;
+    const int            direction_random_on_pngSize = 3733;
+
     extern const char*   env_rampdown_off_png;
     const int            env_rampdown_off_pngSize = 3641;
 
@@ -63,7 +81,7 @@ namespace BinaryData
     const int            inertia_off_on_pngSize = 3070;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 18;
+    const int namedResourceListSize = 24;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

@@ -12,6 +12,8 @@
 #include "Grain.h"
 #include "ReferenceCountedBuffer.h"
 
+#define LOG(textToWrite)    JUCE_BLOCK_WITH_FORCED_SEMICOLON (juce::String tempDbgBuf; tempDbgBuf << textToWrite; juce::Logger::writeToLog (tempDbgBuf);)
+
 //==============================================================================
 /**
 */
@@ -67,18 +69,19 @@ public:
     juce::AudioPlayHead::CurrentPositionInfo currentPositionInfo;
     float myBPM = -1.0f;
 
+    int midiNotes[128] = { 0 };
+
     double sampleRate;
     long long int time;
 
     int maxGrains = 200;
-    int delayOnset = 500;
-    bool play = false;
+    int delayOnset = 200;
 
     float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
     long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;
 
-    juce::StringArray envelopeId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
-    juce::StringArray inertiaId = juce::StringArray("inertiaTransposeOff", "inertiaTransposeNote", "inertiaTransposeHz",
+    juce::StringArray envelopesId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
+    juce::StringArray inertiasId = juce::StringArray("inertiaTransposeOff", "inertiaTransposeNote", "inertiaTransposeHz",
                                                     "inertiaDensityOff", "inertiaDensityNote", "inertiaDensityHz",
                                                     "inertiaPositionOff", "inertiaPositionNote", "inertiaPositionHz",
                                                     "inertiaLengthOff", "inertiaLengthNote", "inertiaLengthHz",
@@ -87,6 +90,10 @@ public:
     juce::StringArray slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", 
                                                     "randTranspose", "randDensity", "randPosition", "randLength", "randPanning", "randLevel", 
                                                     "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
+    juce::StringArray directionsId = juce::StringArray("directionForward", "directionBackward", "directionRandom");
+
+    // Create log file
+    juce::FileLogger* fileLog = juce::FileLogger::createDefaultAppLogger("ChapaGranulator", "ChapaGranulator.log", "ChapaGranulator LOG:", 256 * 1024);
 
 private:
     juce::Random random;
@@ -94,6 +101,7 @@ private:
     void run() override;
     void clearBuffer();
     void checkForBuffersToFree();
+    void processMidi(juce::MidiBuffer&);
 
     juce::Array<Grain> grainArray;
 
