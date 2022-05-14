@@ -110,6 +110,23 @@ private:
 
 //==============================================================================
 
+class SynchedSlider : public juce::Slider
+{
+
+public:
+    SynchedSlider() {}
+    ~SynchedSlider() {}
+
+    virtual juce::String getTextFromValue(double value) override
+    {
+        return tempoStrings[int(value) - 1];
+    }
+
+    juce::StringArray tempoStrings = juce::StringArray("1/64", "1/32", "1/16", "1/8", "1/4", "1/2", "1 bar", "2 bars", "4 bars", "8 bars");
+};
+
+//==============================================================================
+
 class ThumbnailFileDragAndDropTarget : public juce::Component, public juce::FileDragAndDropTarget
 {
 

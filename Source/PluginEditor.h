@@ -41,6 +41,8 @@ private:
     void thumbnailChanged();
     void openButtonClicked();
 
+    void showInertiaSlider(int);
+
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     ChapaGranulatorAudioProcessor& audioProcessor;
@@ -53,6 +55,7 @@ private:
     DirectionButton directionButtons[3];
     juce::Slider maxGrainsSlider;
     juce::Slider parameterSliders[18];
+    SynchedSlider synchedSliders[6];
     juce::TextButton openButton;
 
     // Labels associated to buttons and sliders
@@ -66,7 +69,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> inertiaButtonAttachments[18];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> directionButtonAttachments[3];
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> maxGrainsAttachments;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments[18];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> parameterSliderAttachments[18];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> synchedSliderAttachments[6];
     std::unique_ptr<juce::FileChooser> chooser;
 
     // Audio thumbnail

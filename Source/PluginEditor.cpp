@@ -30,7 +30,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     // Set parameters sliders
     for (int i = 0; i < audioProcessor.slidersId.size(); ++i)
     {
-        sliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, audioProcessor.slidersId[i], parameterSliders[i]));
+        parameterSliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, audioProcessor.slidersId[i], parameterSliders[i]));
         parameterSliders[i].setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         parameterLabels[i].setText(slidersText[i], juce::NotificationType::dontSendNotification);
         parameterLabels[i].attachToComponent(&(parameterSliders[i]), false);
@@ -169,6 +169,17 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
     button->repaint();
     if (button == &openButton) openButtonClicked();
+
+    int i = 0;
+    bool inertiaButtonClicked = false;
+    do
+    {
+        if (button == &inertiaButtons[i])
+        {
+            showInertiaSlider(i % 3);
+            inertiaButtonClicked = true;
+        }
+    } while (i < audioProcessor.inertiasId.size() && inertiaButtonClicked == false);
 }
 
 void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
@@ -204,3 +215,8 @@ void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBro
 }
 
 //==============================================================================
+
+void ChapaGranulatorAudioProcessorEditor::showInertiaSlider(int index)
+{
+
+}

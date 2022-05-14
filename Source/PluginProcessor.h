@@ -80,6 +80,7 @@ public:
     float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
     long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;
 
+    // Set all id files
     juce::StringArray envelopesId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
     juce::StringArray inertiasId = juce::StringArray("inertiaTransposeOff", "inertiaTransposeNote", "inertiaTransposeHz",
                                                     "inertiaDensityOff", "inertiaDensityNote", "inertiaDensityHz",
@@ -90,7 +91,11 @@ public:
     juce::StringArray slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", 
                                                     "randTranspose", "randDensity", "randPosition", "randLength", "randPanning", "randLevel", 
                                                     "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
+    juce::StringArray synchedSlidersId = juce::StringArray("inertiaTransposeSynched", "inertiaDensitySynched", "inertiaPositionSynched", "inertiaLengthSynched", "inertiaPanningSynched", "inertiaLevelSynched");
     juce::StringArray directionsId = juce::StringArray("directionForward", "directionBackward", "directionRandom");
+
+    // Store all synched values possible
+    float tempoScales[10] = { 0.015625f, 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f, 1.0f, 2.0f, 4.0f, 8.0f };
 
     // Create log file
     juce::FileLogger* fileLog = juce::FileLogger::createDefaultAppLogger("ChapaGranulator", "ChapaGranulator.log", "ChapaGranulator LOG:", 256 * 1024);
