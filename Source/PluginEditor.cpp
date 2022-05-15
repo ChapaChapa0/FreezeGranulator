@@ -39,8 +39,21 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         parameterSliders[i].setTextValueSuffix(slidersSuffix[i]);
         parameterSliders[i].setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
         parameterSliders[i].addListener(this);
-        parameterSliders[i].setBounds(300 + (i % 6) * 109, 40 + int(i / 6) * 140, 100, 100);
+        parameterSliders[i].setBounds(300 + (i % 6) * 109, 40 + int(i / 6) * 140 + 300, 100, 100);
         addAndMakeVisible(&parameterSliders[i]);
+    }
+    for (int i = 0; i < audioProcessor.synchedSlidersId.size(); ++i)
+    {
+        synchedSliderAttachments[i].reset(new juce::AudioProcessorValueTreeState::SliderAttachment(valueTreeState, audioProcessor.synchedSlidersId[i], synchedSliders[i]));
+        synchedSliders[i].setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+        synchedLabels[i].setText(slidersText[12 + i], juce::NotificationType::dontSendNotification);
+        synchedLabels[i].attachToComponent(&(synchedSliders[i]), false);
+        synchedSliders[i].setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 75, 30);
+        synchedSliders[i].setTextBoxIsEditable(false);
+        synchedSliders[i].setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
+        synchedSliders[i].addListener(this);
+        synchedSliders[i].setBounds(300 + (i % 6) * 109, 320 + 300, 100, 100);
+        addChildComponent(&synchedSliders[i]);
     }
 
     // Set envelope buttons
@@ -51,7 +64,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         envelopeButtons[i].setClickingTogglesState(true);
         envelopeButtons[i].setRadioGroupId(100, juce::NotificationType::sendNotification);
         envelopeButtons[i].addListener(this);
-        envelopeButtons[i].setBounds(20 + (i % 3) * 70, 180 + int(i / 3) * 70, 60, 60);
+        envelopeButtons[i].setBounds(20 + (i % 3) * 70, 180 + int(i / 3) * 70 + 300, 60, 60);
         addAndMakeVisible(&envelopeButtons[i]);
     }
     envelopeLabel.setText("Envelope", juce::NotificationType::dontSendNotification);
@@ -65,7 +78,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         inertiaButtons[i].setClickingTogglesState(true);
         inertiaButtons[i].setRadioGroupId(200 + int(i / 3), juce::NotificationType::sendNotification);
         inertiaButtons[i].addListener(this);
-        inertiaButtons[i].setBounds(300 + i * 33 +int(i / 3) * 10, 425, 30, 30);
+        inertiaButtons[i].setBounds(300 + i * 33 + int(i / 3) * 10, 425 + 300, 30, 30);
         addAndMakeVisible(&inertiaButtons[i]);
     }
 
@@ -77,7 +90,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         directionButtons[i].setClickingTogglesState(true);
         directionButtons[i].setRadioGroupId(300, juce::NotificationType::sendNotification);
         directionButtons[i].addListener(this);
-        directionButtons[i].setBounds(20 + i * 70, 370, 60, 60);
+        directionButtons[i].setBounds(20 + i * 70, 370 + 300, 60, 60);
         addAndMakeVisible(&directionButtons[i]);
     }
     directionLabel.setText("Direction", juce::NotificationType::dontSendNotification);
@@ -93,17 +106,17 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     maxGrainsSlider.setTextValueSuffix("x");
     maxGrainsSlider.setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
     maxGrainsSlider.addListener(this);
-    maxGrainsSlider.setBounds(20, 40, 200, 100);
+    maxGrainsSlider.setBounds(20, 40 + 300, 200, 100);
     addAndMakeVisible(&maxGrainsSlider);
 
     // Set open file button
     openButton.setButtonText("Open...");
     openButton.addListener(this);
-    openButton.setBounds(10, 480, 980, 20);
+    openButton.setBounds(10, 280, 980, 20);
     addAndMakeVisible(&openButton);
 
     // Set the File Drag And Drop Target
-    thumbnailTarget.setBounds(10, 520, 980, 250);
+    thumbnailTarget.setBounds(10, 20, 980, 250);
     addAndMakeVisible(&thumbnailTarget);
     
     // Set GUI size
@@ -123,7 +136,7 @@ void ChapaGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
 
-    juce::Rectangle<int> thumbnailBounds(10, 520, getWidth() - 20, 250);
+    juce::Rectangle<int> thumbnailBounds(10, 20, getWidth() - 20, 250);
 
     if (thumbnail.getNumChannels() == 0)
         paintIfNoFileLoaded(g, thumbnailBounds);
@@ -170,16 +183,21 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
     button->repaint();
     if (button == &openButton) openButtonClicked();
 
-    int i = 0;
-    bool inertiaButtonClicked = false;
-    do
+    else
     {
-        if (button == &inertiaButtons[i])
+        int i = 0;
+        bool inertiaButtonClicked = false;
+        do
         {
-            showInertiaSlider(i % 3);
-            inertiaButtonClicked = true;
-        }
-    } while (i < audioProcessor.inertiasId.size() && inertiaButtonClicked == false);
+            if (button == &inertiaButtons[i])
+            {
+                showInertiaSlider(i);
+                inertiaButtonClicked = true;
+            }
+            ++i;
+        } while (i < audioProcessor.inertiasId.size() && inertiaButtonClicked == false);
+    }
+
 }
 
 void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
@@ -218,5 +236,16 @@ void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBro
 
 void ChapaGranulatorAudioProcessorEditor::showInertiaSlider(int index)
 {
-
+    int numParameterSlider = 12 + int(index / 3);
+    int numSynchedSlider = int(index / 3);
+    if (index % 3 == 1)
+    {
+        parameterSliders[numParameterSlider].setVisible(false);
+        synchedSliders[numSynchedSlider].setVisible(true);
+    }
+    else
+    {
+        parameterSliders[numParameterSlider].setVisible(true);
+        synchedSliders[numSynchedSlider].setVisible(false);
+    }
 }

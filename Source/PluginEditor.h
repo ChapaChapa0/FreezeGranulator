@@ -63,6 +63,7 @@ private:
     juce::Label directionLabel;
     juce::Label maxGrainsLabel;
     juce::Label parameterLabels[18];
+    juce::Label synchedLabels[6];
 
     // Attachments to buttons and sliders
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];

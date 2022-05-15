@@ -406,13 +406,14 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeLevel)
             {
-                float inertiaLevel = *(parameters.getRawParameterValue("inertiaLevel"));
                 if (*(parameters.getRawParameterValue("inertiaLevelNote")) > 0.5f && myBPM > 0)
                 {
-                    timeLevel = time + int(inertiaLevel * sampleRate / (myBPM / 60));
+                    float inertiaLevelSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaLevelSynched")))];
+                    timeLevel = time + int(inertiaLevelSynched * sampleRate / (myBPM / 60));
                 }
                 if (*(parameters.getRawParameterValue("inertiaLevelHz")) > 0.5f)
                 {
+                    float inertiaLevel = *(parameters.getRawParameterValue("inertiaLevel"));
                     timeLevel = time + int(1 / inertiaLevel * sampleRate);
                 }
             }
@@ -427,13 +428,14 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timePosition)
             {
-                float inertiaPosition = *(parameters.getRawParameterValue("inertiaPosition"));
                 if (*(parameters.getRawParameterValue("inertiaPositionNote")) > 0.5f && myBPM > 0)
                 {
-                    timePosition = time + int(inertiaPosition * sampleRate / (myBPM / 60));
+                    float inertiaPositionSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaPositionSynched")))];
+                    timePosition = time + int(inertiaPositionSynched * sampleRate / (myBPM / 60));
                 }
                 if (*(parameters.getRawParameterValue("inertiaPositionHz")) > 0.5f)
                 {
+                    float inertiaPosition = *(parameters.getRawParameterValue("inertiaPosition"));
                     timePosition = time + int(1 / inertiaPosition * sampleRate);
                 }
             }
@@ -448,13 +450,14 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeLength)
             {
-                float inertiaLength = *(parameters.getRawParameterValue("inertiaLength"));
                 if (*(parameters.getRawParameterValue("inertiaLengthNote")) > 0.5f && myBPM > 0)
                 {
-                    timeLength = time + int(inertiaLength * sampleRate / (myBPM / 60));
+                    float inertiaLengthSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaLengthSynched")))];
+                    timeLength = time + int(inertiaLengthSynched * sampleRate / (myBPM / 60));
                 }
                 if (*(parameters.getRawParameterValue("inertiaLengthHz")) > 0.5f)
                 {
+                    float inertiaLength = *(parameters.getRawParameterValue("inertiaLength"));
                     timeLength = time + int(1 / inertiaLength * sampleRate);
                 }
             }
@@ -469,13 +472,14 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeDensity)
             {
-                float inertiaDensity = *(parameters.getRawParameterValue("inertiaDensity"));
                 if (*(parameters.getRawParameterValue("inertiaDensityNote")) > 0.5f && myBPM > 0)
                 {
-                    timeDensity = time + int(inertiaDensity * sampleRate / (myBPM / 60));
+                    float inertiaDensitySynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaDensitySynched")))];
+                    timeDensity = time + int(inertiaDensitySynched * sampleRate / (myBPM / 60));
                 }
                 if (*(parameters.getRawParameterValue("inertiaDensityHz")) > 0.5f)
                 {
+                    float inertiaDensity = *(parameters.getRawParameterValue("inertiaDensity"));
                     timeDensity = time + int(1 / inertiaDensity * sampleRate);
                 }
             }
@@ -490,13 +494,14 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timePanning)
             {
-                float inertiaPanning = *(parameters.getRawParameterValue("inertiaPanning"));
                 if (*(parameters.getRawParameterValue("inertiaPanningNote")) > 0.5f && myBPM > 0)
                 {
-                    timePanning = time + int(inertiaPanning * sampleRate / (myBPM / 60));
+                    float inertiaPanningSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaPanningSynched")))];
+                    timePanning = time + int(inertiaPanningSynched * sampleRate / (myBPM / 60));
                 }
                 if (*(parameters.getRawParameterValue("inertiaPanningHz")) > 0.5f)
                 {
+                    float inertiaPanning = *(parameters.getRawParameterValue("inertiaPanning"));
                     timePanning = time + int(1 / inertiaPanning * sampleRate);
                 }
             }
@@ -545,11 +550,11 @@ void ChapaGranulatorAudioProcessor::clearBuffer()
 
 void ChapaGranulatorAudioProcessor::processMidi(juce::MidiBuffer& midiMessages)
 {
-    juce::MidiBuffer::Iterator i(midiMessages);
+    juce::MidiBuffer::Iterator iterator(midiMessages);
     juce::MidiMessage message;
     int time;
 
-    while (i.getNextEvent(message, time))
+    while (iterator.getNextEvent(message, time))
     {
         if (message.isNoteOn()) {
             midiNotes[message.getNoteNumber()] = message.getVelocity();
