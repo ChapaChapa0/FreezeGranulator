@@ -27,51 +27,51 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
         std::make_unique<juce::AudioParameterFloat>("transpose", "Transposition of Sample", juce::NormalisableRange<float>(-2400.0f, 2400.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTranspose", "Amount Random Transposition", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique<juce::AudioParameterFloat>("inertiaTranspose", "Amount Transposition Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaTransposeSynched", "Amount Transposition Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaTransposeOff", "Inertia Transpose Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaTransposeNote", "Inertia Transpose Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaTransposeHz", "Inertia Transpose Frequency Mode", false),
+        std::make_unique<juce::AudioParameterFloat>("freezeTranspose", "Amount Transposition Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezeTransposeSynched", "Amount Transposition Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezeTransposeOff", "Freeze Transpose Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezeTransposeNote", "Freeze Transpose Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezeTransposeHz", "Freeze Transpose Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("density", "Density of Grains", juce::NormalisableRange<float>(1.0f, 100.0f, 0.01f, 0.4f), 10.0f),
         std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Density", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique<juce::AudioParameterFloat>("inertiaDensity", "Amount Density Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaDensitySynched", "Amount Density Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaDensityOff", "Inertia Density Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaDensityNote", "Inertia Density Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaDensityHz", "Inertia Density Frequency Mode", false),
+        std::make_unique<juce::AudioParameterFloat>("freezeDensity", "Amount Density Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezeDensitySynched", "Amount Density Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezeDensityOff", "Freeze Density Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezeDensityNote", "Freeze Density Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezeDensityHz", "Freeze Density Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique<juce::AudioParameterFloat>("inertiaPosition", "Amount Position Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaPositionSynched", "Amount Position Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaPositionOff", "Inertia Position Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaPositionNote", "Inertia Position Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaPositionHz", "Inertia Position Frequency Mode", false),
+        std::make_unique<juce::AudioParameterFloat>("freezePosition", "Amount Position Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezePositionSynched", "Amount Position Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezePositionOff", "Freeze Position Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezePositionNote", "Freeze Position Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezePositionHz", "Freeze Position Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.3f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique<juce::AudioParameterFloat>("inertiaLength", "Amount Length Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaLengthSynched", "Amount Length Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaLengthOff", "Inertia Length Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaLengthNote", "Inertia Length Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaLengthHz", "Inertia Length Frequency Mode", false),
+        std::make_unique<juce::AudioParameterFloat>("freezeLength", "Amount Length Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezeLengthSynched", "Amount Length Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezeLengthOff", "Freeze Length Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezeLengthNote", "Freeze Length Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezeLengthHz", "Freeze Length Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
         std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique<juce::AudioParameterFloat>("inertiaLevel", "Amount Level Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaLevelSynched", "Amount Level Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaLevelOff", "Inertia Level Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaLevelNote", "Inertia Level Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaLevelHz", "Inertia Level Frequency Mode", false),
+        std::make_unique<juce::AudioParameterFloat>("freezeLevel", "Amount Level Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezeLevelSynched", "Amount Level Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezeLevelOff", "Freeze Level Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezeLevelNote", "Freeze Level Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezeLevelHz", "Freeze Level Frequency Mode", false),
 
         std::make_unique <juce::AudioParameterFloat>("panning", "Panning of Grains", juce::NormalisableRange<float>(-100.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("randPanning", "Amount Random Panning", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
-        std::make_unique <juce::AudioParameterFloat>("inertiaPanning", "Amount Panning Inertia", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("inertiaPanningSynched", "Amount Panning Inertia (Synched)", 1, 10, 5),
-        std::make_unique<juce::AudioParameterBool>("inertiaPanningOff", "Inertia Panning Off", true),
-        std::make_unique<juce::AudioParameterBool>("inertiaPanningNote", "Inertia Panning Note Mode", false),
-        std::make_unique<juce::AudioParameterBool>("inertiaPanningHz", "Inertia Panning Frequency Mode", false),
+        std::make_unique <juce::AudioParameterFloat>("freezePanning", "Amount Panning Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
+        std::make_unique<juce::AudioParameterInt>("freezePanningSynched", "Amount Panning Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterBool>("freezePanningOff", "Freeze Panning Off", true),
+        std::make_unique<juce::AudioParameterBool>("freezePanningNote", "Freeze Panning Note Mode", false),
+        std::make_unique<juce::AudioParameterBool>("freezePanningHz", "Freeze Panning Frequency Mode", false),
 
         std::make_unique<juce::AudioParameterBool>("envelopeSine", "Grain Envelope Sine", true),
         std::make_unique<juce::AudioParameterBool>("envelopeTriangle", "Grain Envelope Triangle", false),
@@ -94,7 +94,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
     juce::Logger::setCurrentLogger(fileLog);
 
-    // Init all grains and inertia parameters
+    // Init all grains and freeze parameters
     grainLength = 50.0f, grainPosition = 0.0f, grainTranspose = 0.0f, grainDensity = 10.0f, grainLevel = 0.0f, grainPanning = 0.0f;
     timeLength = 0, timePosition = 0, timeTranspose = 0, timeDensity = 0, timeLevel = 0, timePanning = 0;
 
@@ -374,8 +374,19 @@ void ChapaGranulatorAudioProcessor::run()
             } while (i < envelopesId.size() && grainEnvelopeId < 0);
             if (grainEnvelopeId == 5) grainEnvelopeId = random.nextInt(5);
 
-            // Compute transpose grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaTransposeOff")) > 0.5f || time > timeTranspose)
+            // Get grain direction
+            int grainDirectionId = -1;
+            i = 0;
+            do
+            {
+                float direction_i = *(parameters.getRawParameterValue(directionsId[i]));
+                if (direction_i > 0.5f) grainDirectionId = i;
+                ++i;
+            } while (i < directionsId.size() && grainDirectionId < 0);
+            if (grainDirectionId == 2) grainDirectionId = random.nextInt(2);
+
+            // Compute transpose grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezeTransposeOff")) > 0.5f || time > timeTranspose)
             {
                 float transpose = *(parameters.getRawParameterValue("transpose"));
                 float randTranspose = *(parameters.getRawParameterValue("randTranspose"));
@@ -384,20 +395,20 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeTranspose)
             {
-                if (*(parameters.getRawParameterValue("inertiaTransposeNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezeTransposeNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaTransposeSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaTransposeSynched")))];
-                    timeTranspose = time + int(inertiaTransposeSynched * sampleRate / (myBPM / 60));
+                    float freezeTransposeSynched = tempoScales[int(*(parameters.getRawParameterValue("freezeTransposeSynched")))];
+                    timeTranspose = time + int(freezeTransposeSynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaTransposeHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezeTransposeHz")) > 0.5f)
                 {
-                    float inertiaTranspose = *(parameters.getRawParameterValue("inertiaTranspose"));
-                    timeTranspose = time + int(1 / inertiaTranspose * sampleRate);
+                    float freezeTranspose = *(parameters.getRawParameterValue("freezeTranspose"));
+                    timeTranspose = time + int(1 / freezeTranspose * sampleRate);
                 }
             }
 
-            // Compute level grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaLevelOff")) > 0.5f || time > timeLevel)
+            // Compute level grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezeLevelOff")) > 0.5f || time > timeLevel)
             {
                 float level = *(parameters.getRawParameterValue("level"));
                 float randLevel = *(parameters.getRawParameterValue("randLevel"));
@@ -406,20 +417,20 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeLevel)
             {
-                if (*(parameters.getRawParameterValue("inertiaLevelNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezeLevelNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaLevelSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaLevelSynched")))];
-                    timeLevel = time + int(inertiaLevelSynched * sampleRate / (myBPM / 60));
+                    float freezeLevelSynched = tempoScales[int(*(parameters.getRawParameterValue("freezeLevelSynched")))];
+                    timeLevel = time + int(freezeLevelSynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaLevelHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezeLevelHz")) > 0.5f)
                 {
-                    float inertiaLevel = *(parameters.getRawParameterValue("inertiaLevel"));
-                    timeLevel = time + int(1 / inertiaLevel * sampleRate);
+                    float freezeLevel = *(parameters.getRawParameterValue("freezeLevel"));
+                    timeLevel = time + int(1 / freezeLevel * sampleRate);
                 }
             }
 
-            // Compute position grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaPositionOff")) > 0.5f || time > timePosition)
+            // Compute position grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezePositionOff")) > 0.5f || time > timePosition)
             {
                 float position = *(parameters.getRawParameterValue("position"));
                 float randPosition = *(parameters.getRawParameterValue("randPosition"));
@@ -428,20 +439,20 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timePosition)
             {
-                if (*(parameters.getRawParameterValue("inertiaPositionNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezePositionNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaPositionSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaPositionSynched")))];
-                    timePosition = time + int(inertiaPositionSynched * sampleRate / (myBPM / 60));
+                    float freezePositionSynched = tempoScales[int(*(parameters.getRawParameterValue("freezePositionSynched")))];
+                    timePosition = time + int(freezePositionSynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaPositionHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezePositionHz")) > 0.5f)
                 {
-                    float inertiaPosition = *(parameters.getRawParameterValue("inertiaPosition"));
-                    timePosition = time + int(1 / inertiaPosition * sampleRate);
+                    float freezePosition = *(parameters.getRawParameterValue("freezePosition"));
+                    timePosition = time + int(1 / freezePosition * sampleRate);
                 }
             }
 
-            // Compute length grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaLengthOff")) > 0.5f || time > timeLength)
+            // Compute length grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezeLengthOff")) > 0.5f || time > timeLength)
             {
                 float length = *(parameters.getRawParameterValue("length"));
                 float randLength = *(parameters.getRawParameterValue("randLength"));
@@ -450,20 +461,20 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeLength)
             {
-                if (*(parameters.getRawParameterValue("inertiaLengthNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezeLengthNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaLengthSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaLengthSynched")))];
-                    timeLength = time + int(inertiaLengthSynched * sampleRate / (myBPM / 60));
+                    float freezeLengthSynched = tempoScales[int(*(parameters.getRawParameterValue("freezeLengthSynched")))];
+                    timeLength = time + int(freezeLengthSynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaLengthHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezeLengthHz")) > 0.5f)
                 {
-                    float inertiaLength = *(parameters.getRawParameterValue("inertiaLength"));
-                    timeLength = time + int(1 / inertiaLength * sampleRate);
+                    float freezeLength = *(parameters.getRawParameterValue("freezeLength"));
+                    timeLength = time + int(1 / freezeLength * sampleRate);
                 }
             }
 
-            // Compute density grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaDensityOff")) > 0.5f || time > timeDensity)
+            // Compute density grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezeDensityOff")) > 0.5f || time > timeDensity)
             {
                 float density = *(parameters.getRawParameterValue("density"));
                 float randDensity = *(parameters.getRawParameterValue("randDensity"));
@@ -472,20 +483,20 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timeDensity)
             {
-                if (*(parameters.getRawParameterValue("inertiaDensityNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezeDensityNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaDensitySynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaDensitySynched")))];
-                    timeDensity = time + int(inertiaDensitySynched * sampleRate / (myBPM / 60));
+                    float freezeDensitySynched = tempoScales[int(*(parameters.getRawParameterValue("freezeDensitySynched")))];
+                    timeDensity = time + int(freezeDensitySynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaDensityHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezeDensityHz")) > 0.5f)
                 {
-                    float inertiaDensity = *(parameters.getRawParameterValue("inertiaDensity"));
-                    timeDensity = time + int(1 / inertiaDensity * sampleRate);
+                    float freezeDensity = *(parameters.getRawParameterValue("freezeDensity"));
+                    timeDensity = time + int(1 / freezeDensity * sampleRate);
                 }
             }
 
-            // Compute panning grain parameter according to random and inertia values
-            if (*(parameters.getRawParameterValue("inertiaPanningOff")) > 0.5f || time > timePanning)
+            // Compute panning grain parameter according to random and freeze values
+            if (*(parameters.getRawParameterValue("freezePanningOff")) > 0.5f || time > timePanning)
             {
                 float panning = *(parameters.getRawParameterValue("panning"));
                 float randPanning = *(parameters.getRawParameterValue("randPanning"));
@@ -494,15 +505,15 @@ void ChapaGranulatorAudioProcessor::run()
             }
             if (time > timePanning)
             {
-                if (*(parameters.getRawParameterValue("inertiaPanningNote")) > 0.5f && myBPM > 0)
+                if (*(parameters.getRawParameterValue("freezePanningNote")) > 0.5f && myBPM > 0)
                 {
-                    float inertiaPanningSynched = tempoScales[int(*(parameters.getRawParameterValue("inertiaPanningSynched")))];
-                    timePanning = time + int(inertiaPanningSynched * sampleRate / (myBPM / 60));
+                    float freezePanningSynched = tempoScales[int(*(parameters.getRawParameterValue("freezePanningSynched")))];
+                    timePanning = time + int(freezePanningSynched * sampleRate / (myBPM / 60));
                 }
-                if (*(parameters.getRawParameterValue("inertiaPanningHz")) > 0.5f)
+                if (*(parameters.getRawParameterValue("freezePanningHz")) > 0.5f)
                 {
-                    float inertiaPanning = *(parameters.getRawParameterValue("inertiaPanning"));
-                    timePanning = time + int(1 / inertiaPanning * sampleRate);
+                    float freezePanning = *(parameters.getRawParameterValue("freezePanning"));
+                    timePanning = time + int(1 / freezePanning * sampleRate);
                 }
             }
 
@@ -514,7 +525,7 @@ void ChapaGranulatorAudioProcessor::run()
             long long int onset = time + delayOnset;
 
             // Generate grain and add it to the array of grains
-            Grain grain = *new Grain(onset, grainLengthInSamples, grainLevel, grainPosition, grainPanning, grainRate, grainEnvelopeId);
+            Grain grain = *new Grain(onset, grainLengthInSamples, grainLevel, grainPosition, grainPanning, grainRate, grainEnvelopeId, grainDirectionId);
             grainArray.add(grain);
 
             // Wait according to the ponctual density computed (density = number of grains generated per second)

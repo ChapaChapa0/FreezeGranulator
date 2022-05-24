@@ -11,8 +11,8 @@
 #include "Grain.h"
 
 
-Grain::Grain(long long int onset, int length, float level, float startPos, float panning, float rate, int envId) 
-            : onset(onset), length(length), level(level), startPosition(startPos), panning(panning), rate(rate), envelopeId(envId)
+Grain::Grain(long long int onset, int length, float level, float startPos, float panning, float rate, int envId, int dirId) 
+            : onset(onset), length(length), level(level), startPosition(startPos), panning(panning), rate(rate), envelopeId(envId), directionId(dirId)
 {
 }
 
@@ -25,24 +25,25 @@ Grain::Grain()
     panning = 0.0f;
     rate = 0.0f;
     envelopeId = 0;
+    directionId = 0;
 }
 
 Grain::~Grain()
 {
 }
 
-float Grain::envelope(int time)
+float Grain::envelope(int timeGrain)
 {
     float valueEnv;
-    if (time > length || time < 0) valueEnv = 0;
+    if (timeGrain > length || timeGrain < 0) valueEnv = 0;
 
     else
     {
-        if (envelopeId == 1) valueEnv = triangularWindow(time, length);
-        else if (envelopeId == 2) valueEnv = rectangularWindow(time, length);
-        else if (envelopeId == 3) valueEnv = rampUpWindow(time, length);
-        else if (envelopeId == 4) valueEnv = rampDownWindow(time, length);
-        else valueEnv = hammingWindow(time, length);
+        if (envelopeId == 1) valueEnv = triangularWindow(timeGrain, length);
+        else if (envelopeId == 2) valueEnv = rectangularWindow(timeGrain, length);
+        else if (envelopeId == 3) valueEnv = rampUpWindow(timeGrain, length);
+        else if (envelopeId == 4) valueEnv = rampDownWindow(timeGrain, length);
+        else valueEnv = hammingWindow(timeGrain, length);
     }
 
     return valueEnv;
@@ -58,8 +59,18 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
 
     for (int channel = 0; channel < numChannels; ++channel)
     {
-        int startPositionInSamples = juce::jmax(0, int(startPosition * fileNumSamples - 1));
-        int currentPosition = juce::jmax(startPositionInSamples, (startPositionInSamples + int(timeGrain * rate)) % fileNumSamples);
+        int currentPosition;
+        if (directionId == 1)
+        {
+            int startPositionInSamples = juce::jmin(fileNumSamples - 1, int(startPosition * fileNumSamples + int(length * rate)));
+            currentPosition = juce::jmax(0, startPositionInSamples - int(timeGrain * rate));
+        }
+        else
+        {
+            int startPositionInSamples = juce::jmax(0, int(startPosition * fileNumSamples - 1));
+            currentPosition = juce::jmax(startPositionInSamples, (startPositionInSamples + int(timeGrain * rate)) % fileNumSamples);
+        }
+
         float sample = fileBuffer.getSample(channel % fileBufferNumChannels, currentPosition);
 
         float sampleLeft = sample * envelope(timeGrain) * level * 0.2f * abs(panning - 100.0f) / 200.0f;

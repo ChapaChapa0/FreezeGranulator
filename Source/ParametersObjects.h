@@ -48,10 +48,10 @@ private:
 
 //==============================================================================
 
-class InertiaButton : public juce::ImageButton
+class FreezeButton : public juce::ImageButton
 {
 public:
-    InertiaButton() {}
+    FreezeButton() {}
 
     void setButton(int index)
     {

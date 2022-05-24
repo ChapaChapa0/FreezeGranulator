@@ -23,8 +23,8 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
 
     // Set parameters bounds, id and name
     juce::StringArray slidersText = juce::StringArray("transpose", "density", "position", "length", "panning", "level",
-                                                      "r transpose", "r density", "r position", "r length", "r panning", "r level",
-                                                      "i transpose", "i density", "i position", "i length", "i panning", "i level");
+                                                      "rand trans", "rand dens", "rand pos", "rand length", "rand pan", "rand level",
+                                                      "freeze trans", "freeze dens", "freeze pos", "freeze length", "freeze pan", "freeze level");
     juce::StringArray slidersSuffix = juce::StringArray(" cts", "x", "x", " ms", "x", "x", "%", "%", "%", "%", "%", "%", " Hz", " Hz", " Hz", " Hz", " Hz", " Hz");
 
     // Set parameters sliders
@@ -70,16 +70,29 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     envelopeLabel.setText("Envelope", juce::NotificationType::dontSendNotification);
     envelopeLabel.attachToComponent(&(envelopeButtons[0]), false);
 
-    // Set inertia buttons
-    for (int i = 0; i < audioProcessor.inertiasId.size(); ++i)
+    // Set freeze buttons
+    for (int i = 0; i < audioProcessor.freezesId.size(); ++i)
     {
-        inertiaButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, audioProcessor.inertiasId[i], inertiaButtons[i]));
-        inertiaButtons[i].setButton(i % 3);
-        inertiaButtons[i].setClickingTogglesState(true);
-        inertiaButtons[i].setRadioGroupId(200 + int(i / 3), juce::NotificationType::sendNotification);
-        inertiaButtons[i].addListener(this);
-        inertiaButtons[i].setBounds(300 + i * 33 + int(i / 3) * 10, 425 + 300, 30, 30);
-        addAndMakeVisible(&inertiaButtons[i]);
+        freezeButtonAttachments[i].reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, audioProcessor.freezesId[i], freezeButtons[i]));
+        freezeButtons[i].setButton(i % 3);
+        freezeButtons[i].setClickingTogglesState(true);
+        freezeButtons[i].setRadioGroupId(200 + int(i / 3), juce::NotificationType::sendNotification);
+        freezeButtons[i].addListener(this);
+        freezeButtons[i].setBounds(300 + i * 33 + int(i / 3) * 10, 425 + 300, 30, 30);
+        addAndMakeVisible(&freezeButtons[i]);
+    }
+
+    // Set freeze sliders visibility
+    for (int i = 0; i < audioProcessor.freezesId.size(); ++i)
+    {
+        bool synchedBool = freezeButtons[i].getToggleState();
+        int numParameterSlider = 12 + int(i / 3);
+        int numSynchedSlider = int(i / 3);
+        if (i % 3 == 1 && synchedBool)
+        {
+            parameterSliders[numParameterSlider].setVisible(false);
+            synchedSliders[numSynchedSlider].setVisible(true);
+        }
     }
 
     // Set direction buttons
@@ -149,6 +162,7 @@ void ChapaGranulatorAudioProcessorEditor::paintIfNoFileLoaded(juce::Graphics& g,
     g.setColour(juce::Colours::transparentBlack);
     g.fillRect(thumbnailBounds);
     g.setColour(chapaGranulatorLook.blazeorange);
+
     g.drawFittedText("No File Loaded", thumbnailBounds, juce::Justification::centred, 1);
 }
 
@@ -186,16 +200,17 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
     else
     {
         int i = 0;
-        bool inertiaButtonClicked = false;
+        bool freezeButtonClicked = false;
         do
         {
-            if (button == &inertiaButtons[i])
+            if (button == &freezeButtons[i])
             {
-                showInertiaSlider(i);
-                inertiaButtonClicked = true;
+                showFreezeSlider(i);
+                freezeButtonClicked = true;
             }
             ++i;
-        } while (i < audioProcessor.inertiasId.size() && inertiaButtonClicked == false);
+        } while (i < audioProcessor.freezesId.size() && freezeButtonClicked == false);
+
     }
 
 }
@@ -234,7 +249,7 @@ void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBro
 
 //==============================================================================
 
-void ChapaGranulatorAudioProcessorEditor::showInertiaSlider(int index)
+void ChapaGranulatorAudioProcessorEditor::showFreezeSlider(int index)
 {
     int numParameterSlider = 12 + int(index / 3);
     int numSynchedSlider = int(index / 3);

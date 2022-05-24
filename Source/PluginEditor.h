@@ -41,7 +41,7 @@ private:
     void thumbnailChanged();
     void openButtonClicked();
 
-    void showInertiaSlider(int);
+    void showFreezeSlider(int);
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -51,7 +51,7 @@ private:
 
     // Buttons and sliders
     EnvelopeButton envelopeButtons[6];
-    InertiaButton inertiaButtons[18];
+    FreezeButton freezeButtons[18];
     DirectionButton directionButtons[3];
     juce::Slider maxGrainsSlider;
     juce::Slider parameterSliders[18];
@@ -67,7 +67,7 @@ private:
 
     // Attachments to buttons and sliders
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> envelopeButtonAttachments[6];
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> inertiaButtonAttachments[18];
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeButtonAttachments[18];
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> directionButtonAttachments[3];
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> maxGrainsAttachments;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> parameterSliderAttachments[18];

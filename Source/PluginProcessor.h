@@ -74,24 +74,25 @@ public:
     double sampleRate;
     long long int time;
 
-    int maxGrains = 200;
-    int delayOnset = 200;
+    // Delay before activation of each grain
+    int delayOnset = 100;
 
     float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
     long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;
 
-    // Set all id files
+    // Set the id for all parameters
     juce::StringArray envelopesId = juce::StringArray("envelopeSine", "envelopeTriangle", "envelopeRectangle", "envelopeRampUp", "envelopeRampDown", "envelopeRandom");
-    juce::StringArray inertiasId = juce::StringArray("inertiaTransposeOff", "inertiaTransposeNote", "inertiaTransposeHz",
-                                                    "inertiaDensityOff", "inertiaDensityNote", "inertiaDensityHz",
-                                                    "inertiaPositionOff", "inertiaPositionNote", "inertiaPositionHz",
-                                                    "inertiaLengthOff", "inertiaLengthNote", "inertiaLengthHz",
-                                                    "inertiaPanningOff", "inertiaPanningNote", "inertiaPanningHz",
-                                                    "inertiaLevelOff", "inertiaLevelNote", "inertiaLevelHz");
+    juce::StringArray freezesId = juce::StringArray("freezeTransposeOff", "freezeTransposeNote", "freezeTransposeHz",
+                                                    "freezeDensityOff", "freezeDensityNote", "freezeDensityHz",
+                                                    "freezePositionOff", "freezePositionNote", "freezePositionHz",
+                                                    "freezeLengthOff", "freezeLengthNote", "freezeLengthHz",
+                                                    "freezePanningOff", "freezePanningNote", "freezePanningHz",
+                                                    "freezeLevelOff", "freezeLevelNote", "freezeLevelHz");
     juce::StringArray slidersId = juce::StringArray("transpose", "density", "position", "length", "panning", "level", 
                                                     "randTranspose", "randDensity", "randPosition", "randLength", "randPanning", "randLevel", 
-                                                    "inertiaTranspose", "inertiaDensity", "inertiaPosition", "inertiaLength", "inertiaPanning", "inertiaLevel");
-    juce::StringArray synchedSlidersId = juce::StringArray("inertiaTransposeSynched", "inertiaDensitySynched", "inertiaPositionSynched", "inertiaLengthSynched", "inertiaPanningSynched", "inertiaLevelSynched");
+                                                    "freezeTranspose", "freezeDensity", "freezePosition", "freezeLength", "freezePanning", "freezeLevel");
+    juce::StringArray synchedSlidersId = juce::StringArray("freezeTransposeSynched", "freezeDensitySynched", "freezePositionSynched", 
+                                                           "freezeLengthSynched", "freezePanningSynched", "freezeLevelSynched");
     juce::StringArray directionsId = juce::StringArray("directionForward", "directionBackward", "directionRandom");
 
     // Store all synched values possible
@@ -108,13 +109,15 @@ private:
     void checkForBuffersToFree();
     void processMidi(juce::MidiBuffer&);
 
+    // Array contening all active grains, when a grain has finished it is removed from the array
     juce::Array<Grain> grainArray;
 
     juce::SpinLock mutex;
     juce::ReferenceCountedArray<ReferenceCountedBuffer> buffers;
     ReferenceCountedBuffer::Ptr currentBuffer;
 
-    juce::AudioProcessorValueTreeState parameters;    
+    // Value tree state contening the values of all parameters
+    juce::AudioProcessorValueTreeState parameters;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChapaGranulatorAudioProcessor)

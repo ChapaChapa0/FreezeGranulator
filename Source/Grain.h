@@ -14,7 +14,7 @@
 class Grain
 {
 public:
-    Grain(long long int onset, int length, float level, float startPos, float panning, float transpose, int envelopeId);
+    Grain(long long int onset, int length, float level, float startPos, float panning, float transpose, int envelopeId, int directionId);
     Grain();
     ~Grain();
 
@@ -22,7 +22,7 @@ public:
     void process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuffer& fileBuffer, int numChannels, int blockNumSamples, int fileNumSamples, int time);
 
     long long int onset;
-    int length, envelopeId;
+    int length, envelopeId, directionId;
     float level, startPosition, panning, rate;
 
 private:
