@@ -83,8 +83,6 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterBool>("directionForward", "Direction Grains Forward", true),
         std::make_unique<juce::AudioParameterBool>("directionBackward", "Direction Grains Backward", false),
         std::make_unique<juce::AudioParameterBool>("directionRandom", "Direction Grains Random", false),
-        
-        //std::make_unique <juce::AudioParameterChoice>("direction", "Direction Grains", juce::StringArray("Forward", "Backward", "Random"), 0),
 
         }), juce::Thread("Background Thread")
 #endif
