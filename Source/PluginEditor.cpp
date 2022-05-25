@@ -189,7 +189,6 @@ void ChapaGranulatorAudioProcessorEditor::resized()
 
 void ChapaGranulatorAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
-    audioProcessor.updateValue();
 }
 
 void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
@@ -217,7 +216,6 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 
 void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
 {
-    audioProcessor.updateValue();
 }
 
 void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
@@ -237,8 +235,6 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
                 audioProcessor.updateFile();
             }
         });
-
-    audioProcessor.updateValue();
 }
 
 

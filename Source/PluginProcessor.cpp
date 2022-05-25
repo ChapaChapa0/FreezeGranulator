@@ -28,7 +28,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("transpose", "Transposition of Sample", juce::NormalisableRange<float>(-2400.0f, 2400.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randTranspose", "Amount Random Transposition", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("freezeTranspose", "Amount Transposition Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezeTransposeSynched", "Amount Transposition Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezeTransposeSynched", "Amount Transposition Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezeTransposeOff", "Freeze Transpose Off", true),
         std::make_unique<juce::AudioParameterBool>("freezeTransposeNote", "Freeze Transpose Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezeTransposeHz", "Freeze Transpose Frequency Mode", false),
@@ -36,7 +36,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("density", "Density of Grains", juce::NormalisableRange<float>(1.0f, 100.0f, 0.01f, 0.4f), 10.0f),
         std::make_unique<juce::AudioParameterFloat>("randDensity", "Amount Random Density", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("freezeDensity", "Amount Density Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezeDensitySynched", "Amount Density Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezeDensitySynched", "Amount Density Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezeDensityOff", "Freeze Density Off", true),
         std::make_unique<juce::AudioParameterBool>("freezeDensityNote", "Freeze Density Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezeDensityHz", "Freeze Density Frequency Mode", false),
@@ -44,7 +44,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("position", "Position in Sample", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0001f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("randPosition", "Amount Random Position", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("freezePosition", "Amount Position Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezePositionSynched", "Amount Position Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezePositionSynched", "Amount Position Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezePositionOff", "Freeze Position Off", true),
         std::make_unique<juce::AudioParameterBool>("freezePositionNote", "Freeze Position Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezePositionHz", "Freeze Position Frequency Mode", false),
@@ -52,7 +52,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("length", "Length of Grains", juce::NormalisableRange<float>(1.0f, 10000.0f, 0.1f, 0.3f), 50.0f),
         std::make_unique<juce::AudioParameterFloat>("randLength", "Amount Random Length", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("freezeLength", "Amount Length Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezeLengthSynched", "Amount Length Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezeLengthSynched", "Amount Length Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezeLengthOff", "Freeze Length Off", true),
         std::make_unique<juce::AudioParameterBool>("freezeLengthNote", "Freeze Length Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezeLengthHz", "Freeze Length Frequency Mode", false),
@@ -60,7 +60,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique<juce::AudioParameterFloat>("level", "Level of Grains", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 100.0f),
         std::make_unique<juce::AudioParameterFloat>("randLevel", "Amount Random Level", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique<juce::AudioParameterFloat>("freezeLevel", "Amount Level Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezeLevelSynched", "Amount Level Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezeLevelSynched", "Amount Level Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezeLevelOff", "Freeze Level Off", true),
         std::make_unique<juce::AudioParameterBool>("freezeLevelNote", "Freeze Level Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezeLevelHz", "Freeze Level Frequency Mode", false),
@@ -68,7 +68,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         std::make_unique <juce::AudioParameterFloat>("panning", "Panning of Grains", juce::NormalisableRange<float>(-100.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("randPanning", "Amount Random Panning", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f),
         std::make_unique <juce::AudioParameterFloat>("freezePanning", "Amount Panning Freeze", juce::NormalisableRange<float>(0.1f, 100.0f, 0.01f, 0.4f), 1.0f),
-        std::make_unique<juce::AudioParameterInt>("freezePanningSynched", "Amount Panning Freeze (Synched)", 1, 10, 5),
+        std::make_unique<juce::AudioParameterInt>("freezePanningSynched", "Amount Panning Freeze (Synched)", 0, 9, 4),
         std::make_unique<juce::AudioParameterBool>("freezePanningOff", "Freeze Panning Off", true),
         std::make_unique<juce::AudioParameterBool>("freezePanningNote", "Freeze Panning Note Mode", false),
         std::make_unique<juce::AudioParameterBool>("freezePanningHz", "Freeze Panning Frequency Mode", false),
@@ -96,7 +96,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
 
     // Init all grains and freeze parameters
     grainLength = 50.0f, grainPosition = 0.0f, grainTranspose = 0.0f, grainDensity = 10.0f, grainLevel = 0.0f, grainPanning = 0.0f;
-    timeLength = 0, timePosition = 0, timeTranspose = 0, timeDensity = 0, timeLevel = 0, timePanning = 0;
+    timeLength = -1, timePosition = -1, timeTranspose = -1, timeDensity = -1, timeLevel = -1, timePanning = -1;
 
     formatManager.registerBasicFormats();
     startThread();
@@ -223,7 +223,27 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     {
         playHead->getCurrentPosition(currentPositionInfo);
         if (currentPositionInfo.bpm != myBPM)
+        {
             myBPM = currentPositionInfo.bpm;
+        }
+        if (currentPositionInfo.isPlaying != isPlaying)
+        {
+            isPlaying = currentPositionInfo.isPlaying;
+            if (isPlaying == false)
+            {
+                time = 0;
+                timeTranspose = -1;
+                timeDensity = -1;
+                timePosition = -1;
+                timeLength = -1;
+                timePanning = -1;
+                timeLevel = -1;
+            }
+        }
+        if (currentPositionInfo.ppqPosition != ppqPosition)
+        {
+            ppqPosition = currentPositionInfo.ppqPosition;
+        }
     }
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -301,10 +321,6 @@ void ChapaGranulatorAudioProcessor::setStateInformation (const void* data, int s
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::updateValue()
-{
-}
-
 void ChapaGranulatorAudioProcessor::updateFile()
 {
     auto file = juce::File(filePath);

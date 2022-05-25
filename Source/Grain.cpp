@@ -73,8 +73,8 @@ void Grain::process(juce::AudioSampleBuffer& currentBlock, juce::AudioSampleBuff
 
         float sample = fileBuffer.getSample(channel % fileBufferNumChannels, currentPosition);
 
-        float sampleLeft = sample * envelope(timeGrain) * level * 0.2f * abs(panning - 100.0f) / 200.0f;
-        float sampleRight = sample * envelope(timeGrain) * level * 0.2f * abs(panning + 100.0f) / 200.0f;
+        float sampleLeft = sample * envelope(timeGrain) * level * 0.5f * abs(panning - 100.0f) / 200.0f;
+        float sampleRight = sample * envelope(timeGrain) * level * 0.5f * abs(panning + 100.0f) / 200.0f;
 
         currentBlock.addSample(channel, time % blockNumSamples, (channel % 2 == 0) ? sampleLeft : sampleRight);
     }

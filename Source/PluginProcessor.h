@@ -58,7 +58,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    void updateValue();
     void updateFile();
     
     juce::MidiKeyboardState keyboardState;
@@ -68,6 +67,8 @@ public:
     // CurrentPositionInfo object used to get BPM from host
     juce::AudioPlayHead::CurrentPositionInfo currentPositionInfo;
     float myBPM = -1.0f;
+    bool isPlaying = false;
+    double ppqPosition = 0.0;
 
     int midiNotes[128] = { 0 };
 
@@ -75,7 +76,7 @@ public:
     long long int time;
 
     // Delay before activation of each grain
-    int delayOnset = 100;
+    int delayOnset = 80;
 
     float grainLength, grainPosition, grainTranspose, grainDensity, grainLevel, grainPanning;
     long long int timeLength, timePosition, timeTranspose, timeDensity, timeLevel, timePanning;

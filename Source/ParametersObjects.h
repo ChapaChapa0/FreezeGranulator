@@ -119,7 +119,7 @@ public:
 
     virtual juce::String getTextFromValue(double value) override
     {
-        return tempoStrings[int(value) - 1];
+        return tempoStrings[int(value)];
     }
 
     juce::StringArray tempoStrings = juce::StringArray("1/64", "1/32", "1/16", "1/8", "1/4", "1/2", "1 bar", "2 bars", "4 bars", "8 bars");
