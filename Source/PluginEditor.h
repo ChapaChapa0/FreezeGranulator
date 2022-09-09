@@ -16,13 +16,13 @@
 //==============================================================================
 /**
 */
-class ChapaGranulatorAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Button::Listener, 
+class FreezeGranulatorAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Button::Listener, 
                                              public juce::Slider::Listener, private juce::ChangeListener,
                                              public juce::DragAndDropContainer
 {
 public:
-    ChapaGranulatorAudioProcessorEditor (ChapaGranulatorAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~ChapaGranulatorAudioProcessorEditor() override;
+    FreezeGranulatorAudioProcessorEditor (FreezeGranulatorAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~FreezeGranulatorAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
@@ -33,7 +33,7 @@ public:
     virtual void buttonStateChanged(juce::Button* button) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
-    PluginLook chapaGranulatorLook;
+    PluginLook freezeGranulatorLook;
 
 private:
     void paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
@@ -45,7 +45,7 @@ private:
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    ChapaGranulatorAudioProcessor& audioProcessor;
+    FreezeGranulatorAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& valueTreeState;
     juce::MidiKeyboardComponent keyboardComponent;
 
@@ -79,5 +79,5 @@ private:
     juce::AudioThumbnail thumbnail;
     ThumbnailFileDragAndDropTarget thumbnailTarget;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChapaGranulatorAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FreezeGranulatorAudioProcessorEditor)
 };

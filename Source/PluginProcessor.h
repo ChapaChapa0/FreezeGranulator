@@ -17,12 +17,12 @@
 //==============================================================================
 /**
 */
-class ChapaGranulatorAudioProcessor  : public juce::AudioProcessor, private juce::Thread
+class FreezeGranulatorAudioProcessor  : public juce::AudioProcessor, private juce::Thread
 {
 public:
     //==============================================================================
-    ChapaGranulatorAudioProcessor();
-    ~ChapaGranulatorAudioProcessor() override;
+    FreezeGranulatorAudioProcessor();
+    ~FreezeGranulatorAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -100,7 +100,7 @@ public:
     float tempoScales[10] = { 0.015625f, 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f, 1.0f, 2.0f, 4.0f, 8.0f };
 
     // Create log file
-    juce::FileLogger* fileLog = juce::FileLogger::createDefaultAppLogger("ChapaGranulator", "ChapaGranulator.log", "ChapaGranulator LOG:", 256 * 1024);
+    juce::FileLogger* fileLog = juce::FileLogger::createDefaultAppLogger("FreezeGranulator", "FreezeGranulator.log", "FreezeGranulator LOG:", 256 * 1024);
 
 private:
     juce::Random random;
@@ -121,5 +121,5 @@ private:
     juce::AudioProcessorValueTreeState parameters;
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChapaGranulatorAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FreezeGranulatorAudioProcessor)
 };

@@ -11,7 +11,7 @@
 #include <iostream>
 
 //==============================================================================
-ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
+FreezeGranulatorAudioProcessor::FreezeGranulatorAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
@@ -21,7 +21,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
     ),
-    parameters(*this, nullptr, juce::Identifier("ChapaGranulator"),
+    parameters(*this, nullptr, juce::Identifier("FreezeGranulator"),
         {
         std::make_unique<juce::AudioParameterInt>("maxGrains", "Number Max of Grains", 10, 1000, 100),
 
@@ -100,7 +100,7 @@ ChapaGranulatorAudioProcessor::ChapaGranulatorAudioProcessor()
     startThread();
 }
 
-ChapaGranulatorAudioProcessor::~ChapaGranulatorAudioProcessor()
+FreezeGranulatorAudioProcessor::~FreezeGranulatorAudioProcessor()
 {
     stopThread(4000);
     clearBuffer();
@@ -110,12 +110,12 @@ ChapaGranulatorAudioProcessor::~ChapaGranulatorAudioProcessor()
 }
 
 //==============================================================================
-const juce::String ChapaGranulatorAudioProcessor::getName() const
+const juce::String FreezeGranulatorAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool ChapaGranulatorAudioProcessor::acceptsMidi() const
+bool FreezeGranulatorAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -124,7 +124,7 @@ bool ChapaGranulatorAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool ChapaGranulatorAudioProcessor::producesMidi() const
+bool FreezeGranulatorAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -133,7 +133,7 @@ bool ChapaGranulatorAudioProcessor::producesMidi() const
    #endif
 }
 
-bool ChapaGranulatorAudioProcessor::isMidiEffect() const
+bool FreezeGranulatorAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -142,49 +142,49 @@ bool ChapaGranulatorAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double ChapaGranulatorAudioProcessor::getTailLengthSeconds() const
+double FreezeGranulatorAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int ChapaGranulatorAudioProcessor::getNumPrograms()
+int FreezeGranulatorAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int ChapaGranulatorAudioProcessor::getCurrentProgram()
+int FreezeGranulatorAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void ChapaGranulatorAudioProcessor::setCurrentProgram (int index)
+void FreezeGranulatorAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String ChapaGranulatorAudioProcessor::getProgramName (int index)
+const juce::String FreezeGranulatorAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void ChapaGranulatorAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void FreezeGranulatorAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::prepareToPlay (double initSampleRate, int samplesPerBlock)
+void FreezeGranulatorAudioProcessor::prepareToPlay (double initSampleRate, int samplesPerBlock)
 {
     sampleRate = initSampleRate;
 }
 
-void ChapaGranulatorAudioProcessor::releaseResources()
+void FreezeGranulatorAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool ChapaGranulatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool FreezeGranulatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -209,7 +209,7 @@ bool ChapaGranulatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 }
 #endif
 
-void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void FreezeGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -285,18 +285,18 @@ void ChapaGranulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 }
 
 //==============================================================================
-bool ChapaGranulatorAudioProcessor::hasEditor() const
+bool FreezeGranulatorAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* ChapaGranulatorAudioProcessor::createEditor()
+juce::AudioProcessorEditor* FreezeGranulatorAudioProcessor::createEditor()
 {
-    return new ChapaGranulatorAudioProcessorEditor (*this, parameters);
+    return new FreezeGranulatorAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void FreezeGranulatorAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -307,7 +307,7 @@ void ChapaGranulatorAudioProcessor::getStateInformation (juce::MemoryBlock& dest
     copyXmlToBinary(*xml, destData);
 }
 
-void ChapaGranulatorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void FreezeGranulatorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -319,7 +319,7 @@ void ChapaGranulatorAudioProcessor::setStateInformation (const void* data, int s
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessor::updateFile()
+void FreezeGranulatorAudioProcessor::updateFile()
 {
     auto file = juce::File(filePath);
     jassert(file != juce::File{});
@@ -343,7 +343,7 @@ void ChapaGranulatorAudioProcessor::updateFile()
 
 //==============================================================================
 
-void ChapaGranulatorAudioProcessor::run()
+void FreezeGranulatorAudioProcessor::run()
 {
     while (!threadShouldExit())
     {
@@ -556,7 +556,7 @@ void ChapaGranulatorAudioProcessor::run()
 
 //==============================================================================
 
-void ChapaGranulatorAudioProcessor::checkForBuffersToFree()
+void FreezeGranulatorAudioProcessor::checkForBuffersToFree()
 {
     for (auto i = buffers.size(); --i >= 0;)                           // [1]
     {
@@ -567,13 +567,13 @@ void ChapaGranulatorAudioProcessor::checkForBuffersToFree()
     }
 }
 
-void ChapaGranulatorAudioProcessor::clearBuffer()
+void FreezeGranulatorAudioProcessor::clearBuffer()
 {
     const juce::SpinLock::ScopedLockType lock(mutex);
     currentBuffer = nullptr;
 }
 
-void ChapaGranulatorAudioProcessor::processMidi(juce::MidiBuffer& midiMessages)
+void FreezeGranulatorAudioProcessor::processMidi(juce::MidiBuffer& midiMessages)
 {
     juce::MidiBuffer::Iterator iterator(midiMessages);
     juce::MidiMessage message;
@@ -599,5 +599,5 @@ void ChapaGranulatorAudioProcessor::processMidi(juce::MidiBuffer& midiMessages)
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new ChapaGranulatorAudioProcessor();
+    return new FreezeGranulatorAudioProcessor();
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="fVSecQ" name="ChapaGranulator" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="fVSecQ" name="FreezeGranulator" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="ChapaFactory" pluginVST3Category="Instrument" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               companyWebsite="github.com/ChapaChapa0" userNotes="Hope you enjoy &lt;3">
-  <MAINGROUP id="NwRgOp" name="ChapaGranulator">
+  <MAINGROUP id="NwRgOp" name="FreezeGranulator">
     <GROUP id="{74594397-209F-7807-04EA-52BCD2292359}" name="Source">
       <FILE id="yFp3Ik" name="ReferenceCountedBuffer.h" compile="0" resource="0"
             file="Source/ReferenceCountedBuffer.h"/>

@@ -10,13 +10,13 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaGranulatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+FreezeGranulatorAudioProcessorEditor::FreezeGranulatorAudioProcessorEditor (FreezeGranulatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts), 
       keyboardComponent(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
       thumbnailCache(5), thumbnail(512, audioProcessor.formatManager, thumbnailCache),
       thumbnailTarget(p, thumbnail)
 {
-    setLookAndFeel(&chapaGranulatorLook);
+    setLookAndFeel(&freezeGranulatorLook);
     //setResizable(true, true);
 
     thumbnail.addChangeListener(this);
@@ -37,7 +37,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         parameterSliders[i].setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 75, 30);
         parameterSliders[i].setTextBoxIsEditable(true);
         parameterSliders[i].setTextValueSuffix(slidersSuffix[i]);
-        parameterSliders[i].setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
+        parameterSliders[i].setColour(juce::Slider::textBoxOutlineColourId, freezeGranulatorLook.coolblue);
         parameterSliders[i].addListener(this);
         parameterSliders[i].setBounds(300 + (i % 6) * 109, 40 + int(i / 6) * 140 + 300, 100, 100);
         addAndMakeVisible(&parameterSliders[i]);
@@ -50,7 +50,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
         synchedLabels[i].attachToComponent(&(synchedSliders[i]), false);
         synchedSliders[i].setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 75, 30);
         synchedSliders[i].setTextBoxIsEditable(false);
-        synchedSliders[i].setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
+        synchedSliders[i].setColour(juce::Slider::textBoxOutlineColourId, freezeGranulatorLook.coolblue);
         synchedSliders[i].addListener(this);
         synchedSliders[i].setBounds(300 + (i % 6) * 109, 320 + 300, 100, 100);
         addChildComponent(&synchedSliders[i]);
@@ -117,7 +117,7 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     maxGrainsSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 75, 30);
     maxGrainsSlider.setTextBoxIsEditable(true);
     maxGrainsSlider.setTextValueSuffix("x");
-    maxGrainsSlider.setColour(juce::Slider::textBoxOutlineColourId, chapaGranulatorLook.coolblue);
+    maxGrainsSlider.setColour(juce::Slider::textBoxOutlineColourId, freezeGranulatorLook.coolblue);
     maxGrainsSlider.addListener(this);
     maxGrainsSlider.setBounds(20, 40 + 300, 200, 100);
     addAndMakeVisible(&maxGrainsSlider);
@@ -136,13 +136,13 @@ ChapaGranulatorAudioProcessorEditor::ChapaGranulatorAudioProcessorEditor (ChapaG
     setSize (1000, 800);
 }
 
-ChapaGranulatorAudioProcessorEditor::~ChapaGranulatorAudioProcessorEditor()
+FreezeGranulatorAudioProcessorEditor::~FreezeGranulatorAudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
 }
 
 //==============================================================================
-void ChapaGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
+void FreezeGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
@@ -157,41 +157,41 @@ void ChapaGranulatorAudioProcessorEditor::paint (juce::Graphics& g)
         paintIfFileLoaded(g, thumbnailBounds);
 }
 
-void ChapaGranulatorAudioProcessorEditor::paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
+void FreezeGranulatorAudioProcessorEditor::paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
 {
     g.setColour(juce::Colours::transparentBlack);
     g.fillRect(thumbnailBounds);
-    g.setColour(chapaGranulatorLook.blazeorange);
+    g.setColour(freezeGranulatorLook.blazeorange);
 
     g.drawFittedText("No File Loaded", thumbnailBounds, juce::Justification::centred, 1);
 }
 
-void ChapaGranulatorAudioProcessorEditor::paintIfFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
+void FreezeGranulatorAudioProcessorEditor::paintIfFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
 {
     g.setColour(juce::Colours::transparentBlack);
     g.fillRect(thumbnailBounds);
-    g.setColour(chapaGranulatorLook.blazeorange);
+    g.setColour(freezeGranulatorLook.blazeorange);
 
     thumbnail.drawChannel(g, thumbnailBounds, 0.0, thumbnail.getTotalLength(), 0, 1.0f);
     thumbnail.drawChannel(g, thumbnailBounds, 0.0, thumbnail.getTotalLength(), 1, 1.0f);
 }
 
-void ChapaGranulatorAudioProcessorEditor::thumbnailChanged()
+void FreezeGranulatorAudioProcessorEditor::thumbnailChanged()
 {
     repaint();
 }
 
-void ChapaGranulatorAudioProcessorEditor::resized()
+void FreezeGranulatorAudioProcessorEditor::resized()
 {
 }
 
 //==============================================================================
 
-void ChapaGranulatorAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
+void FreezeGranulatorAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
 }
 
-void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
+void FreezeGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 {
     button->repaint();
     if (button == &openButton) openButtonClicked();
@@ -214,11 +214,11 @@ void ChapaGranulatorAudioProcessorEditor::buttonClicked(juce::Button* button)
 
 }
 
-void ChapaGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
+void FreezeGranulatorAudioProcessorEditor::buttonStateChanged(juce::Button* button)
 {
 }
 
-void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
+void FreezeGranulatorAudioProcessorEditor::openButtonClicked()
 {
     chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav", "*.aif", "*.aiff");
     auto chooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
@@ -238,14 +238,14 @@ void ChapaGranulatorAudioProcessorEditor::openButtonClicked()
 }
 
 
-void ChapaGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)
+void FreezeGranulatorAudioProcessorEditor::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
     if (source == &thumbnail) thumbnailChanged();
 }
 
 //==============================================================================
 
-void ChapaGranulatorAudioProcessorEditor::showFreezeSlider(int index)
+void FreezeGranulatorAudioProcessorEditor::showFreezeSlider(int index)
 {
     int numParameterSlider = 12 + int(index / 3);
     int numSynchedSlider = int(index / 3);

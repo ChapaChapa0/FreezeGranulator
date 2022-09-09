@@ -131,7 +131,7 @@ class ThumbnailFileDragAndDropTarget : public juce::Component, public juce::File
 {
 
 public:
-    ThumbnailFileDragAndDropTarget(ChapaGranulatorAudioProcessor& p, juce::AudioThumbnail& thumbnail) 
+    ThumbnailFileDragAndDropTarget(FreezeGranulatorAudioProcessor& p, juce::AudioThumbnail& thumbnail)
         : audioProcessor(p), audioThumbnail(thumbnail) {}
 
     void paint(juce::Graphics& g) override
@@ -173,5 +173,5 @@ public:
     }
 
     juce::AudioThumbnail& audioThumbnail;
-    ChapaGranulatorAudioProcessor& audioProcessor;
+    FreezeGranulatorAudioProcessor& audioProcessor;
 };
